@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenGym</title>
-    <!-- Tailwind CSS -->
+    <title>OpenGym - Advanced Fitness & Goals Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,163 +19,37 @@
                             green: '#22c55e',
                             pink: '#ec4899'
                         }
-                    },
-                    borderRadius: {
-                        'aero': '8px',
-                        'metro': '0px',
-                        'round': '24px'
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-        }
-
-        /* GUI Themes */
-        .theme-multicolor {
-            --bg-main: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --border-color: #e2e8f0;
-        }
-
-        .dark.theme-round {
-            --bg-main: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --border-color: #334155;
-        }
-
-        .theme-oled {
-            --bg-main: #000000;
-            --card-bg: #0d0d0d;
-            --text-main: #ffffff;
-            --border-color: #262626;
-        }
-
-        .theme-white {
-            --bg-main: #ffffff;
-            --card-bg: #f8fafc;
-            --text-main: #020617;
-            --border-color: #e2e8f0;
-        }
-
-        /* Design Styles */
-        .style-round .card-ui, .style-round .btn-ui {
-            border-radius: 20px;
-        }
-
-        .style-metro .card-ui, .style-metro .btn-ui {
-            border-radius: 0px !important;
-        }
-
-        /* Aero Glass Style Fixes & Overrides */
-        body.style-aero {
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #f0f9ff 100%) !important;
-            min-height: 100vh;
-        }
-        body.dark.style-aero {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%) !important;
-        }
-
-        .style-aero .card-ui {
-            border-radius: 12px !important;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(224, 242, 254, 0.45) 100%) !important;
-            backdrop-filter: blur(16px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.8) !important;
-            box-shadow: 0 8px 32px 0 rgba(0, 102, 204, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9) !important;
-        }
-
-        .dark.style-aero .card-ui {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1) !important;
-        }
-
-        /* Aero Buttons */
-        .style-aero button, .style-aero .btn-ui {
-            border-radius: 8px;
-            backdrop-filter: blur(6px);
-        }
-
-        /* Glassmorphic vibrant cards */
-        .gradient-card-blue {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            color: #ffffff;
-        }
-        .gradient-card-red {
-            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-            color: #ffffff;
-        }
-        .gradient-card-orange {
-            background: linear-gradient(135deg, #f97316 0%, #c2410c 100%);
-            color: #ffffff;
-        }
-        .gradient-card-purple {
-            background: linear-gradient(135deg, #a855f7 0%, #6b21a8 100%);
-            color: #ffffff;
-        }
-        .gradient-card-green {
-            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-            color: #ffffff;
-        }
-        .gradient-card-dark-sweaty {
-            background: #000000;
-            color: #ffffff;
-            border: 2px solid #3b82f6;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #475569;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-[var(--bg-main)] text-[var(--text-main)] min-h-screen flex flex-col justify-between pb-24 style-round">
 
     <!-- TOP HEADER -->
     <header class="sticky top-0 z-40 bg-[var(--card-bg)]/80 backdrop-blur-md border-b border-[var(--border-color)] px-4 py-3 shadow-sm">
         <div class="max-w-4xl mx-auto flex items-center justify-between">
-            <!-- Brand Logo -->
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('workout')">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
                     <i class="fa-solid fa-dumbbell text-lg"></i>
                 </div>
                 <div>
                     <h1 class="font-extrabold text-xl tracking-tight leading-none bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">OpenGym</h1>
-                    <span class="text-xs text-slate-500 font-medium">Fitness Tracker</span>
+                    <span class="text-xs text-slate-500 font-medium">100% Free • Open Source</span>
                 </div>
             </div>
 
-            <!-- Level & Header Controls -->
             <div class="flex items-center gap-3">
-                <!-- Level Badge -->
                 <div id="levelBadge" onclick="switchTab('profile')" class="cursor-pointer bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs px-3 py-1.5 rounded-full font-bold flex items-center gap-1.5 shadow-sm hover:scale-105 transition-transform">
                     <i class="fa-solid fa-trophy"></i>
                     <span>Lvl <span id="userLevelNum">0</span></span>
                 </div>
 
-                <!-- Settings Icon -->
                 <button onclick="openModal('settingsModal')" class="w-10 h-10 rounded-xl border border-[var(--border-color)] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                     <i class="fa-solid fa-gear text-lg"></i>
                 </button>
@@ -187,7 +60,7 @@
     <!-- MAIN CONTAINER -->
     <main class="max-w-4xl mx-auto w-full px-4 pt-4 flex-grow">
 
-        <!-- NO-COPYRIGHT MUSIC PLAYER BAR (ONLY VISIBLE ON WORKOUT TAB) -->
+        <!-- NO-COPYRIGHT MUSIC PLAYER BAR -->
         <div id="musicPlayerContainer" class="mb-6 card-ui bg-[var(--card-bg)] border border-[var(--border-color)] p-3 rounded-2xl shadow-sm flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
                 <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center shrink-0">
@@ -216,8 +89,6 @@
 
         <!-- TAB: WORKOUT BUILDER & EXECUTION -->
         <div id="workoutTab" class="tab-content space-y-6">
-            
-            <!-- Quick Add / Exercise Picker -->
             <div class="space-y-3">
                 <div class="flex items-center justify-between">
                     <h2 class="font-bold text-lg text-slate-800 dark:text-slate-100 flex items-center gap-2">
@@ -225,14 +96,9 @@
                     </h2>
                     <span id="routineCountBadge" class="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 font-bold px-2.5 py-1 rounded-full">0 exercises selected</span>
                 </div>
-
-                <!-- Exercise Quick Grid -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="exerciseGrid">
-                    <!-- Exercise cards rendered dynamically -->
-                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="exerciseGrid"></div>
             </div>
 
-            <!-- Current Routine Queue -->
             <div class="card-ui bg-[var(--card-bg)] border border-[var(--border-color)] p-4 rounded-2xl shadow-sm space-y-4">
                 <div class="flex items-center justify-between">
                     <h3 class="font-bold text-slate-800 dark:text-slate-200 text-sm">Selected Queue</h3>
@@ -255,7 +121,6 @@
                 </button>
             </div>
 
-            <!-- Saved User Custom Routines -->
             <div class="card-ui bg-[var(--card-bg)] border border-[var(--border-color)] p-4 rounded-2xl shadow-sm space-y-3">
                 <h3 class="font-bold text-slate-800 dark:text-slate-200 text-sm flex items-center gap-2">
                     <i class="fa-solid fa-folder-open text-amber-500"></i> My Saved Custom Routines
@@ -266,34 +131,71 @@
             </div>
         </div>
 
-        <!-- TAB: EVENTS VIEW (WEEKLY EVENTS) -->
+        <!-- TAB: GOALS & LINEAR CHARTS -->
+        <div id="goalsTab" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div>
+                    <h2 class="font-bold text-xl text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-rose-500"></i> Daily Goals & Linear Charts
+                    </h2>
+                    <p class="text-xs text-slate-500">Set daily targets and track strength progress over time with interactive charts.</p>
+                </div>
+                <button onclick="openModal('setGoalModal')" class="px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Set Daily Goal
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="dailyGoalsContainer"></div>
+
+            <div class="card-ui bg-[var(--card-bg)] border border-[var(--border-color)] p-5 rounded-2xl shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--border-color)] pb-3">
+                    <h3 class="font-bold text-slate-800 dark:text-slate-100 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-blue-500"></i> Interactive Progress Chart
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        <select id="chartMetricSelect" onchange="updateLinearChart()" class="bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] text-xs font-bold rounded-xl px-3 py-1.5 text-slate-800 dark:text-white">
+                            <option value="kcal">Total Kcal Burned</option>
+                            <option value="workout_count">Workout Count</option>
+                        </select>
+                        <select id="chartRangeSelect" onchange="updateLinearChart()" class="bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] text-xs font-bold rounded-xl px-3 py-1.5 text-slate-800 dark:text-white">
+                            <option value="7">Last 7 Days</option>
+                            <option value="14">Last 14 Days</option>
+                            <option value="30" selected>Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="relative w-full h-72">
+                    <canvas id="progressLinearChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: EVENTS VIEW -->
         <div id="eventsTab" class="tab-content hidden space-y-6">
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="font-bold text-xl text-slate-800 dark:text-slate-100 flex items-center gap-2">
                         <i class="fa-solid fa-calendar-days text-emerald-500"></i> Weekly Events
                     </h2>
-                    <p class="text-xs text-slate-500">Events are active only on their designated days. Earn 1 XP per rep & 0.5 XP per second of plank!</p>
+                    <p class="text-xs text-slate-500">Events are active only on designated days. Earn XP per rep and per second of plank!</p>
                 </div>
                 <span class="text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold px-3 py-1 rounded-full border border-emerald-500/30">
                     <i class="fa-solid fa-bolt mr-1"></i>Direct Stage XP
                 </span>
             </div>
 
-            <div class="card-ui bg-[var(--card-bg)] border border-[var(--border-color)] p-4 rounded-2xl shadow-sm space-y-4" id="eventsListContainer">
-                <!-- Weekly events list rendered dynamically -->
-            </div>
+            <div class="card-ui bg-[var(--card-bg)] border border-[var(--border-color)] p-4 rounded-2xl shadow-sm space-y-4" id="eventsListContainer"></div>
         </div>
 
         <!-- TAB: QUESTS VIEW -->
         <div id="questsTab" class="tab-content hidden space-y-6">
-            <!-- Quests Header -->
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="font-bold text-xl text-slate-800 dark:text-slate-100 flex items-center gap-2">
                         <i class="fa-solid fa-scroll text-amber-500"></i> Weekly Challenges
                     </h2>
-                    <p class="text-xs text-slate-500">Complete quests to gain XP points and increase your level.</p>
+                    <p class="text-xs text-slate-500">Complete quests to gain XP points and level up.</p>
                 </div>
                 <div class="text-right">
                     <span class="text-xs text-slate-400 block">Resets in</span>
@@ -301,7 +203,6 @@
                 </div>
             </div>
 
-            <!-- 100s Speed Blitz Banner -->
             <div class="gradient-card-purple p-5 rounded-2xl shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="space-y-1 text-center sm:text-left">
                     <span class="bg-white/20 text-white text-[10px] uppercase font-black px-2.5 py-0.5 rounded-full">New Challenge</span>
@@ -313,15 +214,11 @@
                 </button>
             </div>
 
-            <!-- Quest Cards Container -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="questsList">
-                <!-- Rendered dynamically -->
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="questsList"></div>
         </div>
 
-        <!-- TAB: STATS & PROGRESS -->
+        <!-- TAB: STATS & MUSCLE ANALYTICS -->
         <div id="statsTab" class="tab-content hidden space-y-6">
-            <!-- Top Metric Cards -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div class="gradient-card-blue p-4 rounded-2xl shadow-sm flex flex-col justify-between">
                     <i class="fa-solid fa-fire text-2xl opacity-80 mb-2"></i>
@@ -353,7 +250,68 @@
                 </div>
             </div>
 
-            <!-- History Log -->
+            <!-- TIMEFRAME MUSCLE SKELETON HEATMAP SECTION -->
+            <div class="card-ui bg-[var(--card-bg)] border border-[var(--border-color)] p-5 rounded-2xl shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[var(--border-color)] pb-3">
+                    <div>
+                        <h3 class="font-bold text-slate-800 dark:text-slate-100 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-child text-rose-500"></i> Timeframe Muscle Engagement Heatmap
+                        </h3>
+                        <p class="text-xs text-slate-500">Displays average muscle workload across workouts for chosen period.</p>
+                    </div>
+                    <!-- Timeframe Selector Buttons -->
+                    <div class="flex flex-wrap gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                        <button onclick="setMuscleTimeframe('today')" id="tf-today" class="tf-btn px-2.5 py-1 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-blue-600 shadow-sm">Today</button>
+                        <button onclick="setMuscleTimeframe('yesterday')" id="tf-yesterday" class="tf-btn px-2.5 py-1 text-xs font-bold rounded-lg transition-all text-slate-500">Yesterday</button>
+                        <button onclick="setMuscleTimeframe('7days')" id="tf-7days" class="tf-btn px-2.5 py-1 text-xs font-bold rounded-lg transition-all text-slate-500">7 Days</button>
+                        <button onclick="setMuscleTimeframe('28days')" id="tf-28days" class="tf-btn px-2.5 py-1 text-xs font-bold rounded-lg transition-all text-slate-500">28 Days</button>
+                        <button onclick="setMuscleTimeframe('alltime')" id="tf-alltime" class="tf-btn px-2.5 py-1 text-xs font-bold rounded-lg transition-all text-slate-500">All Time</button>
+                    </div>
+                </div>
+
+                <!-- White Background Outline Skeleton Vector -->
+                <div class="bg-white rounded-2xl p-6 flex items-center justify-around relative border border-slate-200 shadow-inner">
+                    <!-- FRONT SKELETON -->
+                    <div class="flex flex-col items-center">
+                        <span class="text-[10px] uppercase font-black tracking-widest text-slate-400 mb-2">FRONT (ANTERIOR)</span>
+                        <svg width="140" height="230" viewBox="0 0 100 180" class="drop-shadow-sm">
+                            <circle cx="50" cy="15" r="10" class="muscle-outline" fill="#ffffff" stroke="#000000" stroke-width="1.5" />
+                            <rect x="47" y="25" width="6" height="6" class="muscle-outline" fill="#ffffff" stroke="#000000" stroke-width="1.5" />
+                            <path id="stats-m-chest" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 36 32 C 42 32 48 35 49 45 L 35 47 Z M 64 32 C 58 32 52 35 51 45 L 65 47 Z" />
+                            <path id="stats-m-deltoids-front" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 28 33 C 33 32 35 37 34 44 C 28 42 26 36 28 33 Z M 72 33 C 67 32 65 37 66 44 C 72 42 74 36 72 33 Z" />
+                            <path id="stats-m-biceps" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 27 46 C 32 46 32 58 28 62 C 25 58 24 48 27 46 Z M 73 46 C 68 46 68 58 72 62 C 75 58 76 48 73 46 Z" />
+                            <path id="stats-m-forearms-front" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 25 65 L 29 65 L 26 82 L 23 80 Z M 75 65 L 71 65 L 74 82 L 77 80 Z" />
+                            <path id="stats-m-abs" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 42 47 L 58 47 L 56 75 L 44 75 Z" />
+                            <path id="stats-m-obliques" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 36 48 L 41 48 L 43 74 L 38 71 Z M 64 48 L 59 48 L 57 74 L 62 71 Z" />
+                            <path id="stats-m-quads" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 38 82 C 48 82 48 90 46 122 C 38 120 35 95 38 82 Z M 62 82 C 52 82 52 90 54 122 C 62 120 65 95 62 82 Z" />
+                            <path id="stats-m-calves-front" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 39 128 L 45 128 L 43 158 L 38 156 Z M 61 128 L 55 128 L 57 158 L 62 156 Z" />
+                        </svg>
+                    </div>
+
+                    <!-- BACK SKELETON -->
+                    <div class="flex flex-col items-center">
+                        <span class="text-[10px] uppercase font-black tracking-widest text-slate-400 mb-2">BACK (POSTERIOR)</span>
+                        <svg width="140" height="230" viewBox="0 0 100 180" class="drop-shadow-sm">
+                            <circle cx="50" cy="15" r="10" class="muscle-outline" fill="#ffffff" stroke="#000000" stroke-width="1.5" />
+                            <path id="stats-m-traps" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 43 25 L 57 25 L 63 38 L 37 38 Z" />
+                            <path id="stats-m-deltoids-back" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 28 33 C 34 33 36 38 34 44 C 28 42 26 36 28 33 Z M 72 33 C 66 33 64 38 66 44 C 72 42 74 36 72 33 Z" />
+                            <path id="stats-m-lats" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 37 40 L 63 40 L 58 65 L 42 65 Z" />
+                            <path id="stats-m-triceps" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 25 45 C 30 45 30 58 27 62 C 24 58 23 48 25 45 Z M 75 45 C 70 45 70 58 73 62 C 76 58 77 48 75 45 Z" />
+                            <path id="stats-m-lowerback" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 43 66 L 57 66 L 55 77 L 45 77 Z" />
+                            <path id="stats-m-glutes" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 36 79 C 48 76 50 76 64 79 C 64 94 36 94 36 79 Z" />
+                            <path id="stats-m-hamstrings" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 37 96 L 47 96 L 45 125 L 38 123 Z M 63 96 L 53 96 L 55 125 L 62 123 Z" />
+                            <path id="stats-m-calves-back" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 37 128 C 46 128 46 142 42 158 L 37 155 Z M 63 128 C 54 128 54 142 58 158 L 63 155 Z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-around text-xs font-bold pt-2 border-t border-[var(--border-color)]">
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-red-500 border border-black"></span> High Load (3-Star Color)</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-500 border border-black"></span> Moderate Load (2-Star Color)</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 border border-black"></span> Light Load (1-Star Color)</span>
+                </div>
+            </div>
+
             <div class="card-ui bg-[var(--card-bg)] border border-[var(--border-color)] p-4 rounded-2xl shadow-sm space-y-3">
                 <h3 class="font-bold text-slate-800 dark:text-slate-200 text-sm flex items-center gap-2">
                     <i class="fa-solid fa-clock-rotate-left text-slate-400"></i> History Log
@@ -375,7 +333,6 @@
                     <p class="text-sm text-slate-500"><span id="profileXP">0</span> XP Points Earned</p>
                 </div>
 
-                <!-- Total Kcal Burned Counter in Profile -->
                 <div class="max-w-md mx-auto p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-[var(--border-color)] flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-500 flex items-center justify-center font-bold">
@@ -386,7 +343,6 @@
                     <span id="profileTotalKcal" class="text-base font-black text-orange-500 font-mono">0 kcal</span>
                 </div>
 
-                <!-- XP Bar -->
                 <div class="space-y-1.5 max-w-md mx-auto">
                     <div class="w-full bg-slate-200 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
                         <div id="profileXPBar" class="bg-gradient-to-r from-amber-500 to-orange-500 h-full transition-all duration-500" style="width: 0%"></div>
@@ -397,37 +353,35 @@
                     </div>
                 </div>
 
-                <!-- EXPANDABLE ACCORDION FOR DETAILED EXERCISE STATS -->
                 <div class="max-w-md mx-auto text-left border-t border-[var(--border-color)] pt-4 space-y-2">
                     <button onclick="toggleProfileStatsAccordion()" class="w-full p-3 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-between font-bold text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                        <span class="flex items-center gap-2"><i class="fa-solid fa-chart-pie text-blue-500"></i> Rozszerzone Statystyki Ćwiczeń</span>
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-chart-pie text-blue-500"></i> Extended Exercise Statistics</span>
                         <i id="statsAccordionIcon" class="fa-solid fa-chevron-down transition-transform"></i>
                     </button>
                     <div id="statsAccordionContent" class="hidden space-y-2 p-2 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-[var(--border-color)] text-xs">
-                        <div id="detailedStatsList" class="space-y-1.5">
-                            <!-- Populated dynamically -->
-                        </div>
+                        <div id="detailedStatsList" class="space-y-1.5"></div>
                     </div>
                 </div>
 
-                <!-- Level Table -->
                 <div class="pt-4 text-left border-t border-[var(--border-color)]">
                     <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400 mb-3">XP Level Table</h4>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs" id="xpTableGrid">
-                        <!-- Populated dynamically -->
-                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs" id="xpTableGrid"></div>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- BOTTOM NAVIGATION BAR -->
     <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[var(--card-bg)]/90 backdrop-blur-md border-t border-[var(--border-color)] py-2 px-4 shadow-lg">
         <div class="max-w-md mx-auto flex justify-around items-center">
             <button onclick="switchTab('workout')" id="nav-workout" class="flex flex-col items-center gap-1 text-blue-600 font-bold text-xs transition-colors">
                 <i class="fa-solid fa-dumbbell text-lg"></i>
                 <span>Workout</span>
+            </button>
+            <button onclick="switchTab('goals')" id="nav-goals" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium text-xs transition-colors">
+                <i class="fa-solid fa-bullseye text-lg"></i>
+                <span>Goals</span>
             </button>
             <button onclick="switchTab('events')" id="nav-events" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium text-xs transition-colors">
                 <i class="fa-solid fa-calendar-days text-lg"></i>
@@ -450,7 +404,6 @@
 
     <!-- FULLSCREEN ACTIVE WORKOUT EXECUTION OVERLAY -->
     <div id="executionOverlay" class="fixed inset-0 z-50 bg-[var(--bg-main)] hidden flex flex-col justify-between p-6 overflow-y-auto">
-        <!-- Top Bar -->
         <div class="flex items-center justify-between text-slate-700 dark:text-slate-200">
             <div class="flex items-center gap-2 font-bold text-sm">
                 <i class="fa-solid fa-stopwatch text-blue-500"></i>
@@ -461,7 +414,6 @@
             </div>
         </div>
 
-        <!-- Center Exercise Circle Display -->
         <div class="my-auto flex flex-col items-center justify-center py-8">
             <div id="execCircle" class="w-64 h-64 sm:w-72 sm:h-72 rounded-full border-8 border-blue-500 flex flex-col items-center justify-center p-6 text-center shadow-2xl relative bg-[var(--card-bg)] transition-transform duration-300">
                 <span id="execMainValue" class="text-6xl sm:text-7xl font-black text-blue-600 dark:text-blue-400 tracking-tight font-mono">15</span>
@@ -470,7 +422,6 @@
                 <i id="execExIcon" class="fa-solid fa-dumbbell text-2xl text-blue-500 mt-2"></i>
             </div>
 
-            <!-- Rest / Action Controls -->
             <div class="mt-8 flex items-center gap-4 w-full max-w-xs">
                 <button id="execDoneBtn" onclick="nextExerciseStep()" class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-2xl shadow-lg shadow-emerald-500/30 text-lg transition-transform active:scale-95">
                     COMPLETE STEP
@@ -478,7 +429,6 @@
             </div>
         </div>
 
-        <!-- Bottom Exercise Navigation Bar -->
         <div class="flex items-center justify-between text-xs text-slate-500 font-medium border-t border-[var(--border-color)] pt-4">
             <div>
                 <span class="block text-[10px] uppercase text-slate-400">previous:</span>
@@ -490,6 +440,131 @@
             <div class="text-right">
                 <span class="block text-[10px] uppercase text-slate-400">next:</span>
                 <span id="execNextEx" class="font-bold text-slate-700 dark:text-slate-300">None</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANATOMICAL BODY MUSCLE HEATMAP MODAL -->
+    <div id="exerciseInfoModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="card-ui bg-[var(--card-bg)] border border-[var(--border-color)] w-full max-w-2xl rounded-3xl shadow-2xl p-6 space-y-4 max-h-[92vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-3">
+                <div class="flex items-center gap-3">
+                    <div id="infoModalIconBadge" class="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-dumbbell"></i>
+                    </div>
+                    <div>
+                        <h3 id="infoModalTitle" class="font-extrabold text-lg text-slate-800 dark:text-slate-100">Exercise Name</h3>
+                        <span id="infoModalCategory" class="text-xs text-blue-500 font-bold">Category</span>
+                    </div>
+                </div>
+                <button onclick="closeModal('exerciseInfoModal')" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="bg-slate-100 dark:bg-slate-800/80 p-4 rounded-2xl border border-[var(--border-color)] space-y-2">
+                <h4 class="font-bold text-xs uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-amber-500"></i> MET Formula & Caloric Physics (Personalized)
+                </h4>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center pt-1">
+                    <div class="p-2 bg-white dark:bg-slate-700 rounded-xl border border-[var(--border-color)]">
+                        <span class="text-[10px] text-slate-400 block font-bold">MET Value / Config</span>
+                        <span id="infoMetVal" class="text-sm font-black text-blue-600 dark:text-blue-400 font-mono">3.8</span>
+                    </div>
+                    <div class="p-2 bg-white dark:bg-slate-700 rounded-xl border border-[var(--border-color)]">
+                        <span class="text-[10px] text-slate-400 block font-bold">Burn / 1 Repetition</span>
+                        <span id="infoKcalPerRep" class="text-sm font-black text-emerald-600 dark:text-emerald-400 font-mono">0.14 kcal</span>
+                    </div>
+                    <div class="p-2 bg-white dark:bg-slate-700 rounded-xl border border-[var(--border-color)] col-span-2 sm:col-span-1">
+                        <span class="text-[10px] text-slate-400 block font-bold">Burn / 1 Minute</span>
+                        <span id="infoKcalPerMin" class="text-sm font-black text-orange-500 font-mono">4.50 kcal</span>
+                    </div>
+                </div>
+                <p id="infoFormulaDesc" class="text-xs text-slate-500 dark:text-slate-400 italic pt-1 leading-relaxed">
+                    Formula calculated based on your current weight (70kg) and height (175cm).
+                </p>
+            </div>
+
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                        <i class="fa-solid fa-child text-rose-500"></i> Anatomy & Muscle Involvement Map
+                    </h4>
+                    <div class="flex items-center gap-2 text-[10px] font-bold">
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Primary (100%)</span>
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span> Secondary (60%)</span>
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Stabilizers (30%)</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 flex items-center justify-around relative border border-slate-200 shadow-inner">
+                    <div class="flex flex-col items-center">
+                        <span class="text-[10px] uppercase font-black tracking-widest text-slate-400 mb-2">FRONT (ANTERIOR)</span>
+                        <svg width="140" height="230" viewBox="0 0 100 180" class="drop-shadow-sm">
+                            <circle cx="50" cy="15" r="10" class="muscle-outline" fill="#ffffff" stroke="#000000" stroke-width="1.5" />
+                            <rect x="47" y="25" width="6" height="6" class="muscle-outline" fill="#ffffff" stroke="#000000" stroke-width="1.5" />
+                            <path id="m-chest" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 36 32 C 42 32 48 35 49 45 L 35 47 Z M 64 32 C 58 32 52 35 51 45 L 65 47 Z" />
+                            <path id="m-deltoids-front" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 28 33 C 33 32 35 37 34 44 C 28 42 26 36 28 33 Z M 72 33 C 67 32 65 37 66 44 C 72 42 74 36 72 33 Z" />
+                            <path id="m-biceps" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 27 46 C 32 46 32 58 28 62 C 25 58 24 48 27 46 Z M 73 46 C 68 46 68 58 72 62 C 75 58 76 48 73 46 Z" />
+                            <path id="m-forearms-front" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 25 65 L 29 65 L 26 82 L 23 80 Z M 75 65 L 71 65 L 74 82 L 77 80 Z" />
+                            <path id="m-abs" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 42 47 L 58 47 L 56 75 L 44 75 Z" />
+                            <path id="m-obliques" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 36 48 L 41 48 L 43 74 L 38 71 Z M 64 48 L 59 48 L 57 74 L 62 71 Z" />
+                            <path id="m-quads" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 38 82 C 48 82 48 90 46 122 C 38 120 35 95 38 82 Z M 62 82 C 52 82 52 90 54 122 C 62 120 65 95 62 82 Z" />
+                            <path id="m-calves-front" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 39 128 L 45 128 L 43 158 L 38 156 Z M 61 128 L 55 128 L 57 158 L 62 156 Z" />
+                        </svg>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <span class="text-[10px] uppercase font-black tracking-widest text-slate-400 mb-2">BACK (POSTERIOR)</span>
+                        <svg width="140" height="230" viewBox="0 0 100 180" class="drop-shadow-sm">
+                            <circle cx="50" cy="15" r="10" class="muscle-outline" fill="#ffffff" stroke="#000000" stroke-width="1.5" />
+                            <path id="m-traps" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 43 25 L 57 25 L 63 38 L 37 38 Z" />
+                            <path id="m-deltoids-back" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 28 33 C 34 33 36 38 34 44 C 28 42 26 36 28 33 Z M 72 33 C 66 33 64 38 66 44 C 72 42 74 36 72 33 Z" />
+                            <path id="m-lats" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 37 40 L 63 40 L 58 65 L 42 65 Z" />
+                            <path id="m-triceps" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 25 45 C 30 45 30 58 27 62 C 24 58 23 48 25 45 Z M 75 45 C 70 45 70 58 73 62 C 76 58 77 48 75 45 Z" />
+                            <path id="m-lowerback" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 43 66 L 57 66 L 55 77 L 45 77 Z" />
+                            <path id="m-glutes" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 36 79 C 48 76 50 76 64 79 C 64 94 36 94 36 79 Z" />
+                            <path id="m-hamstrings" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 37 96 L 47 96 L 45 125 L 38 123 Z M 63 96 L 53 96 L 55 125 L 62 123 Z" />
+                            <path id="m-calves-back" class="muscle-target muscle-none muscle-outline" stroke="#000000" stroke-width="1.5" d="M 37 128 C 46 128 46 142 42 158 L 37 155 Z M 63 128 C 54 128 54 142 58 158 L 63 155 Z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div id="infoMuscleList" class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-bold pt-1"></div>
+        </div>
+    </div>
+
+    <!-- SET GOAL MODAL -->
+    <div id="setGoalModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="card-ui bg-[var(--card-bg)] border border-[var(--border-color)] w-full max-w-sm rounded-3xl shadow-2xl p-6 space-y-4">
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-bullseye text-rose-500"></i> New Daily Goal
+            </h3>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-slate-500 block mb-1 font-semibold">Goal Type</label>
+                    <select id="goalTypeInput" onchange="toggleGoalTypeInputs()" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-xs font-bold text-slate-800 dark:text-white">
+                        <option value="kcal">Daily Kcal Target</option>
+                        <option value="exercise">Exercise Reps Target</option>
+                    </select>
+                </div>
+
+                <div id="goalExSelectWrapper" class="hidden">
+                    <label class="text-xs text-slate-500 block mb-1 font-semibold">Select Exercise</label>
+                    <select id="goalExerciseKey" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-xs font-bold text-slate-800 dark:text-white"></select>
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-500 block mb-1 font-semibold" id="goalTargetValueLabel">Target Value (Kcal)</label>
+                    <input type="number" id="goalTargetVal" placeholder="e.g. 300" min="1" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-sm font-bold text-slate-800 dark:text-white">
+                </div>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeModal('setGoalModal')" class="flex-1 py-2.5 bg-slate-200 dark:bg-slate-800 font-bold text-xs rounded-xl">Cancel</button>
+                <button onclick="saveNewGoal()" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-md">Save Goal</button>
             </div>
         </div>
     </div>
@@ -506,13 +581,12 @@
                 </button>
             </div>
 
-            <!-- GUI Options -->
             <div class="space-y-3">
                 <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">GUI Theme & Style</h4>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="text-xs text-slate-500 block mb-1 font-semibold">Theme Color</label>
-                        <select id="settingTheme" onchange="applyGUITheme()" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-xs font-bold">
+                        <select id="settingTheme" onchange="applyGUITheme()" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-xs font-bold text-slate-800 dark:text-white">
                             <option value="multicolor">Multicolor Light (Default)</option>
                             <option value="round">Dark Glass</option>
                             <option value="oled">OLED Pure Black</option>
@@ -521,7 +595,7 @@
                     </div>
                     <div>
                         <label class="text-xs text-slate-500 block mb-1 font-semibold">Design Style</label>
-                        <select id="settingStyle" onchange="applyGUIStyle()" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-xs font-bold">
+                        <select id="settingStyle" onchange="applyGUIStyle()" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-xs font-bold text-slate-800 dark:text-white">
                             <option value="round">Round (Modern Soft)</option>
                             <option value="aero">Aero (Win 7 Glass)</option>
                             <option value="metro">Metro (Win 10 Sharp Grid)</option>
@@ -530,31 +604,28 @@
                 </div>
             </div>
 
-            <!-- User Physical Data -->
             <div class="space-y-3">
                 <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">User Physical Profile (Required for MET)</h4>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-xs text-slate-500 block mb-1">Mass (kg)</label>
-                        <input type="number" id="settingMass" value="70" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-sm font-bold">
+                        <input type="number" id="settingMass" value="70" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-sm font-bold text-slate-800 dark:text-white">
                     </div>
                     <div>
                         <label class="text-xs text-slate-500 block mb-1">Height (cm)</label>
-                        <input type="number" id="settingHeight" value="175" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-sm font-bold">
+                        <input type="number" id="settingHeight" value="175" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-sm font-bold text-slate-800 dark:text-white">
                     </div>
                 </div>
             </div>
 
-            <!-- Rest Time Settings -->
             <div class="space-y-3">
                 <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Workout Timing</h4>
                 <div>
                     <label class="text-xs text-slate-500 block mb-1">Rest Duration Between Exercises (seconds)</label>
-                    <input type="number" id="settingRestTime" value="15" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-sm font-bold">
+                    <input type="number" id="settingRestTime" value="15" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-2.5 text-sm font-bold text-slate-800 dark:text-white">
                 </div>
             </div>
 
-            <!-- Data Management -->
             <div class="space-y-3 border-t border-[var(--border-color)] pt-4">
                 <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Data Management</h4>
                 <div class="flex gap-2">
@@ -589,9 +660,7 @@
                 </button>
             </div>
 
-            <div id="questModalBody" class="space-y-4">
-                <!-- Dynamic quest details loaded here -->
-            </div>
+            <div id="questModalBody" class="space-y-4"></div>
 
             <div class="flex gap-2 pt-2">
                 <button onclick="closeModal('questModal')" class="flex-1 py-3 bg-slate-200 dark:bg-slate-800 font-bold text-xs rounded-xl">
@@ -627,7 +696,7 @@
             <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <i class="fa-solid fa-dumbbell text-blue-500"></i> Dumbbell Mass Input
             </h3>
-            <p class="text-xs text-slate-500">Specify mass for 1 dumbbell:</p>
+            <p class="text-xs text-slate-500 font-semibold">Specify mass for 1 dumbbell:</p>
             
             <div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-xl border border-[var(--border-color)] flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Dumbbell Mass: (</span>
@@ -659,9 +728,7 @@
             <div id="blitzSetupView" class="space-y-4">
                 <div>
                     <label class="text-xs text-slate-500 block mb-1 font-bold">Select Reps-Based Exercise:</label>
-                    <select id="blitzExerciseSelect" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold text-slate-800 dark:text-slate-100">
-                        <!-- Dynamically filled -->
-                    </select>
+                    <select id="blitzExerciseSelect" class="w-full bg-slate-100 dark:bg-slate-800 border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold text-slate-800 dark:text-slate-100"></select>
                 </div>
                 <button onclick="start100sTimer()" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-extrabold rounded-xl shadow-lg shadow-purple-500/25">
                     START 100s TIMER
@@ -688,7 +755,6 @@
         </div>
     </div>
 
-    <!-- External Script File -->
     <script src="script.js"></script>
 </body>
 </html>
