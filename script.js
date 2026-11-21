@@ -58,30 +58,41 @@ const EXERCISES_DATABASE = {
         muscles: { primary: ["m-hamstrings"], secondary: ["m-lowerback"], tertiary: ["m-calves-back"] }
     },
     "plank": { 
-        name: "Plank", category: "Isometric", met: 2.8, secondsPerRep: 1, type: "seconds", icon: "fa-stopwatch", color: "from-cyan-500 to-blue-600", plankMultiplier: 3,
+        name: "Plank", category: "Isometric", met: 2.8, secondsPerRep: 1, type: "seconds", icon: "fa-stopwatch", color: "from-cyan-500 to-blue-600",
         muscles: { primary: ["m-abs", "m-obliques"], secondary: ["m-deltoids-front", "m-quads"], tertiary: ["m-lowerback"] }
     },
     "high_knees": { 
-        name: "High Knees", category: "Cardio", met: 7.5, secondsPerRep: 1, type: "reps", icon: "fa-person-running", color: "from-lime-500 to-green-600", customFormula: "high_knees",
+        name: "High Knees", category: "Cardio", met: 7.5, secondsPerRep: 1, type: "reps", icon: "fa-person-running", color: "from-lime-500 to-green-600",
         muscles: { primary: ["m-quads", "m-abs"], secondary: ["m-calves-back"], tertiary: ["m-glutes"] }
     },
     "bicycle_crunches": { 
-        name: "Bicycle Crunches", category: "Core", met: 3.8, secondsPerRep: 2, type: "reps", icon: "fa-child", color: "from-emerald-500 to-teal-600", customFormula: "bicycle_crunches",
+        name: "Bicycle Crunches", category: "Core", met: 3.8, secondsPerRep: 2, type: "reps", icon: "fa-child", color: "from-emerald-500 to-teal-600",
         muscles: { primary: ["m-obliques", "m-abs"], secondary: ["m-quads"], tertiary: ["m-hip-flexors"] }
     },
     "dumbbell_squats": { 
-        name: "Dumbbell Squats", desc: "Squats holding dumbbells at sides or chest.", category: "Legs", type: "reps", isDumbbell: true, dbKey: "dumbbellSquats", icon: "fa-dumbbell", color: "from-blue-600 to-slate-700",
+        name: "Dumbbell Squats", desc: "Squats holding dumbbells at sides or chest.", category: "Legs", type: "reps", secondsPerRep: 3, isDumbbell: true, dbKey: "dumbbellSquats", icon: "fa-dumbbell", color: "from-blue-600 to-slate-700",
         muscles: { primary: ["m-quads", "m-glutes"], secondary: ["m-hamstrings", "m-forearms-front"], tertiary: ["m-lowerback", "m-traps"] }
     },
     "bicep_curls": { 
-        name: "Bicep Curls", desc: "Arm curls with dumbbells.", category: "Arms", type: "reps", isDumbbell: true, dbKey: "bicepCurls", icon: "fa-hand-fist", color: "from-purple-600 to-slate-700",
+        name: "Bicep Curls", desc: "Arm curls with dumbbells.", category: "Arms", type: "reps", secondsPerRep: 3, isDumbbell: true, dbKey: "bicepCurls", icon: "fa-hand-fist", color: "from-purple-600 to-slate-700",
         muscles: { primary: ["m-biceps"], secondary: ["m-forearms-front"], tertiary: ["m-deltoids-front"] }
     },
     "shoulder_press": { 
-        name: "Shoulder Press", desc: "Overhead press with dumbbells.", category: "Shoulders", type: "reps", isDumbbell: true, dbKey: "shoulderPress", icon: "fa-child-reaching", color: "from-amber-600 to-slate-700",
+        name: "Shoulder Press", desc: "Overhead press with dumbbells.", category: "Shoulders", type: "reps", secondsPerRep: 3, isDumbbell: true, dbKey: "shoulderPress", icon: "fa-child-reaching", color: "from-amber-600 to-slate-700",
         muscles: { primary: ["m-deltoids-front", "m-deltoids-back"], secondary: ["m-triceps", "m-traps"], tertiary: ["m-abs"] }
     }
 };
+
+Object.assign(EXERCISES_DATABASE, {
+    chair_stand: { name: "Chair Stand", category: "Strength", type: "reps", secondsPerRep: 3, met: 3, icon: "fa-person", color: "from-teal-500 to-blue-600",
+        muscles: {primary: ['m-quads', 'm-glutes'], secondary: ['m-hamstrings'], tertiary: ['m-abs']} },
+    calf_raise: { name: "Standing Calf Raise", category: "Strength", type: "reps", secondsPerRep: 3, met: 3, icon: "fa-person", color: "from-teal-500 to-blue-600",
+        muscles: {primary: ['m-calves-back'], secondary: [], tertiary: ['m-abs']} },
+    wall_press: { name: "Wall Push-up", category: "Strength", type: "reps", secondsPerRep: 3, met: 3, icon: "fa-person", color: "from-teal-500 to-blue-600",
+        muscles: {primary: ['m-chest', 'm-triceps'], secondary: ['m-deltoids-front'], tertiary: ['m-abs']} },
+    side_lift: { name: "Standing Side Leg Lift", category: "Strength", type: "reps", secondsPerRep: 3, met: 3, icon: "fa-person", color: "from-teal-500 to-blue-600",
+        muscles: {primary: ['m-glutes'], secondary: ['m-obliques'], tertiary: ['m-quads']} },
+});
 
 const WEEKLY_EVENTS_CONFIG = [
     { dayIdx: 1, dayName: "MONDAY", title: "Squat Monday", tag: "Legs", exKey: "squats", stages: [10, 25, 50, 100], unit: "REPS" },
@@ -106,50 +117,23 @@ const LEVEL_XP_TABLE = [
 ];
 
 const NO_COPYRIGHT_PLAYLIST = [
-    { title: "Power Fitness Synth", artist: "TimMoor (Pixabay)", url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a7315b.mp3?filename=synthwave-110023.mp3" },
-    { title: "Energetic Beat", artist: "TimMoor (Pixabay)", url: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=cyberpunk-2099-10701.mp3" },
-    { title: "Heavy Gym Bass", artist: "AlexiAction (Pixabay)", url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=energetic-hip-hop-8303.mp3" },
-    { title: "Action Workout Rock", artist: "RedSmitty (Pixabay)", url: "https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939bc99c1.mp3?filename=action-sport-123456.mp3" },
-    { title: "Phonk Gym Motivation", artist: "AlexiAction (Pixabay)", url: "https://cdn.pixabay.com/download/audio/2023/04/18/audio_658bf4653e.mp3?filename=phonk-style-146608.mp3" }
+    {title: "Night Circuit · 120 BPM", artist: "OpenGym", url: "audio/night-circuit.mp3"},
+    {title: "Slow Burn · Soft Rock · 100 BPM", artist: "OpenGym", url: "audio/slow-burn.mp3"},
+    {title: "Last Tram · Jazz · 116 BPM", artist: "OpenGym", url: "audio/last-tram.mp3"},
+    {title: "Window Seat · Lo-fi · 74 BPM", artist: "OpenGym", url: "audio/window-seat.mp3"},
 ];
 
 function calculateKcal(exKey, value, massKg, heightCm, dbMass = 10) {
     const ex = EXERCISES_DATABASE[exKey];
-    if (!ex) return 0;
-    const validDbMass = parseFloat(dbMass) || 10;
-
-    if (ex.isDumbbell) return calculateDumbbellKcal(ex.dbKey, heightCm, massKg, validDbMass, value);
-    if (ex.customFormula === "high_knees") return (7.5 * 3.5 * massKg * value * 0.5) / 12000;
-    if (ex.customFormula === "bicycle_crunches") return (3.8 * 3.5 * massKg * value) / 12000;
-    if (exKey === "plank") {
-        const durationMinutes = (value * (ex.plankMultiplier || 3)) / 60;
-        return (ex.met * 3.5 * massKg * durationMinutes) / 200;
-    }
-    if (ex.type === "seconds") return (ex.met * 3.5 * massKg * (value / 60)) / 200;
-    else {
-        const durationMinutes = (value * ex.secondsPerRep) / 60;
-        return (ex.met * 3.5 * massKg * durationMinutes) / 200;
-    }
+    if (!ex || !Number.isFinite(Number(value)) || value <= 0 || !(massKg > 0)) return 0;
+    if (ex.isDumbbell) return calculateDumbbellKcal(ex.dbKey, heightCm, massKg, dbMass, value);
+    const seconds = value * (ex.type === "seconds" ? 1 : ex.secondsPerRep);
+    return ex.met * 3.5 * massKg * seconds / 12000;
 }
 
 function calculateTargetUnitsForKcal(exKey, targetKcal, massKg, dbMass = 10) {
-    const ex = EXERCISES_DATABASE[exKey];
-    if (!ex) return 10;
-
-    if (ex.isDumbbell) {
-        const singleRepKcal = calculateDumbbellKcal(ex.dbKey, state.height, massKg, dbMass, 1);
-        if (singleRepKcal <= 0) return 15;
-        return Math.max(1, Math.ceil(targetKcal / singleRepKcal));
-    }
-
-    if (ex.type === "seconds") {
-        const requiredMinutes = (targetKcal * 200) / (ex.met * 3.5 * massKg);
-        return Math.max(5, Math.round(requiredMinutes * 60));
-    } else {
-        const requiredMinutes = (targetKcal * 200) / (ex.met * 3.5 * massKg);
-        const totalSeconds = requiredMinutes * 60;
-        return Math.max(1, Math.round(totalSeconds / ex.secondsPerRep));
-    }
+    const unit = calculateKcal(exKey, 1, massKg, state.height, dbMass);
+    return unit > 0 ? Math.max(1, Math.ceil(targetKcal / unit)) : 0;
 }
 
 /* ==================== 2. STATE MANAGEMENT ==================== */
@@ -193,10 +177,7 @@ function loadState() {
     }
     if (!state.exerciseStats) state.exerciseStats = {};
     if (!state.dailyGoals) state.dailyGoals = [{ id: "goal_kcal_default", type: "kcal", target: 300 }];
-    if (Date.now() > state.questsResetTime) {
-        state.completedQuests = {};
-        state.questsResetTime = Date.now() + 7 * 24 * 60 * 60 * 1000;
-    }
+    syncWeek();
     saveState();
 }
 
@@ -207,6 +188,7 @@ function saveState() {
 
 /* ==================== 3. UI RENDER ENGINE ==================== */
 function updateUI() {
+    syncWeek();
     let currentLvl = 0;
     for (let i = LEVEL_XP_TABLE.length - 1; i >= 0; i--) {
         if (state.points >= LEVEL_XP_TABLE[i].xp) {
@@ -229,6 +211,11 @@ function updateUI() {
     const maxXp = nextLvlObj.xp;
     const progressPct = maxXp > minXp ? Math.min(100, Math.max(0, ((state.points - minXp) / (maxXp - minXp)) * 100)) : 100;
 
+    const ring = document.getElementById('rank-ring');
+    ring.style.setProperty('--progress', progressPct + '%');
+    ring.style.setProperty('--rank-color', ['#569da1','#158a83','#3874bf','#8255b2'][Math.min(3,Math.floor(currentLvl/3))]);
+    document.getElementById('rank-mark').textContent = String(currentLvl).padStart(2,'0');
+    document.getElementById('rank-distance').textContent = maxXp === minXp ? 'Highest level reached' : (maxXp-state.points).toLocaleString() + ' XP to level ' + nextLvlObj.lvl;
     document.getElementById("profileXPBar").style.width = progressPct + "%";
     document.getElementById("currentLevelMin").innerText = minXp + " XP";
     document.getElementById("nextLevelMax").innerText = maxXp + " XP";
@@ -253,6 +240,7 @@ function updateUI() {
     renderHistoryLog();
     renderXPTable();
     renderQuests();
+    renderWeeklyGoals();
     renderDetailedProfileStats();
     renderDailyGoals();
     populateChartMetrics();
@@ -457,51 +445,13 @@ function openExerciseInfoModal(exKey) {
 
     document.getElementById("infoFormulaDesc").innerText = ex.isDumbbell 
         ? `Physics mechanical work formula W = m * g * h (20% efficiency) using your mass (${state.mass}kg) and height (${state.height}cm).`
-        : `Official MET formula (${ex.met}) personalized for your body mass (${state.mass}kg).`;
+        : `Estimated MET value (${ex.met}) personalized for your body mass (${state.mass}kg).`;
 
-    document.querySelectorAll("#exerciseInfoModal .muscle-target").forEach(el => {
-        el.className.baseVal = "muscle-target muscle-none muscle-outline";
-    });
-
-    const muscleListContainer = document.getElementById("infoMuscleList");
-    muscleListContainer.innerHTML = "";
-
-    if (ex.muscles) {
-        if (ex.muscles.primary) {
-            ex.muscles.primary.forEach(mId => {
-                const target = document.getElementById(mId);
-                if (target) target.className.baseVal = "muscle-target muscle-primary muscle-outline";
-            });
-        }
-        if (ex.muscles.secondary) {
-            ex.muscles.secondary.forEach(mId => {
-                const target = document.getElementById(mId);
-                if (target) target.className.baseVal = "muscle-target muscle-secondary muscle-outline";
-            });
-        }
-        if (ex.muscles.tertiary) {
-            ex.muscles.tertiary.forEach(mId => {
-                const target = document.getElementById(mId);
-                if (target) target.className.baseVal = "muscle-target muscle-tertiary muscle-outline";
-            });
-        }
-
-        muscleListContainer.innerHTML = `
-            <div class="p-2 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
-                <span class="block text-[10px] uppercase font-black">Primary (100%):</span>
-                <span>${ex.muscles.primary ? ex.muscles.primary.map(cleanMuscleName).join(', ') : 'None'}</span>
-            </div>
-            <div class="p-2 rounded-xl bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20">
-                <span class="block text-[10px] uppercase font-black">Secondary (60%):</span>
-                <span>${ex.muscles.secondary ? ex.muscles.secondary.map(cleanMuscleName).join(', ') : 'None'}</span>
-            </div>
-            <div class="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                <span class="block text-[10px] uppercase font-black">Stabilizers (30%):</span>
-                <span>${ex.muscles.tertiary ? ex.muscles.tertiary.map(cleanMuscleName).join(', ') : 'None'}</span>
-            </div>
-        `;
-    }
-
+    paintAtlas('#exerciseInfoModal', '', Object.fromEntries(muscleExposure(ex, 1)));
+    document.getElementById('infoMuscleList').textContent = Object.entries(ex.muscles)
+        .filter(([, ids]) => ids.length)
+        .map(([role, ids]) => role + ' · ' + ids.map(cleanMuscleName).join(', ')).join('  /  ');
+    startDemo(exKey);
     openModal("exerciseInfoModal");
 }
 
@@ -556,54 +506,21 @@ function renderTimeframeMuscleHeatmap() {
         filteredLogs = state.history;
     }
 
-    document.querySelectorAll("#statsTab .muscle-target").forEach(el => {
-        el.className.baseVal = "muscle-target muscle-none muscle-outline";
-    });
-
-    if (filteredLogs.length === 0) return;
-
-    filteredLogs.forEach(log => {
-        if (!log.exStats) return;
-        Object.keys(log.exStats).forEach(exKey => {
-            const reps = log.exStats[exKey] || 0;
-            const ex = EXERCISES_DATABASE[exKey];
-            if (!ex || !ex.muscles || reps <= 0) return;
-
-            if (ex.muscles.primary) {
-                ex.muscles.primary.forEach(m => {
-                    const key = m.replace("m-", "");
-                    muscleScores[key] = (muscleScores[key] || 0) + (reps * 1.0);
-                });
-            }
-            if (ex.muscles.secondary) {
-                ex.muscles.secondary.forEach(m => {
-                    const key = m.replace("m-", "");
-                    muscleScores[key] = (muscleScores[key] || 0) + (reps * 0.6);
-                });
-            }
-            if (ex.muscles.tertiary) {
-                ex.muscles.tertiary.forEach(m => {
-                    const key = m.replace("m-", "");
-                    muscleScores[key] = (muscleScores[key] || 0) + (reps * 0.3);
-                });
-            }
-        });
-    });
-
-    const workoutCount = filteredLogs.length;
-    Object.keys(muscleScores).forEach(mKey => {
-        const avgScore = muscleScores[mKey] / workoutCount;
-        const targetEl = document.getElementById("stats-m-" + mKey);
-        if (targetEl) {
-            if (avgScore >= 35) {
-                targetEl.className.baseVal = "muscle-target muscle-primary muscle-outline";
-            } else if (avgScore >= 12) {
-                targetEl.className.baseVal = "muscle-target muscle-secondary muscle-outline";
-            } else if (avgScore > 0) {
-                targetEl.className.baseVal = "muscle-target muscle-tertiary muscle-outline";
+    for (const log of filteredLogs) {
+        for (const [key, units] of Object.entries(log.exStats || {})) {
+            const ex = EXERCISES_DATABASE[key];
+            if (!ex || !Number.isFinite(Number(units)) || units <= 0) continue;
+            for (const [id, seconds] of muscleExposure(ex, units)) {
+                muscleScores[id] = (muscleScores[id] || 0) + seconds;
             }
         }
-    });
+    }
+    paintAtlas('#statsTab', 'stats-', muscleScores);
+    const top = Object.entries(muscleScores).sort((a,b) => b[1] - a[1]).slice(0,3);
+    document.getElementById('atlas-summary').textContent = top.length ?
+        top.map(([id, value]) => cleanMuscleName(id) + ' · ' + Math.round(value) + ' weighted s').join('  /  ') :
+        'No logged exercise for this period.';
+
 }
 
 /* ==================== 6. GOALS & LINEAR CHART SYSTEM ==================== */
@@ -744,6 +661,7 @@ function populateChartMetrics() {
 }
 
 function updateLinearChart() {
+    if (typeof Chart === "undefined") return;
     const ctx = document.getElementById("progressLinearChart");
     if (!ctx) return;
 
@@ -817,65 +735,80 @@ function updateLinearChart() {
 }
 
 /* ==================== 7. WEEKLY EVENTS SYSTEM ==================== */
-function renderWeeklyEvents() {
-    const container = document.getElementById("eventsListContainer");
-    container.innerHTML = "";
-
-    const currentDayIdx = new Date().getDay();
-
-    WEEKLY_EVENTS_CONFIG.forEach(evt => {
-        const isToday = currentDayIdx === evt.dayIdx;
-        const ex = EXERCISES_DATABASE[evt.exKey];
-
-        const card = document.createElement("div");
-        card.className = `p-4 rounded-2xl border ${isToday ? 'bg-emerald-500/10 border-emerald-500 shadow-md' : 'bg-slate-50 dark:bg-slate-800/30 border-[var(--border-color)] opacity-70'} space-y-3`;
-
-        let stagesHTML = evt.stages.map(stageVal => {
-            const stageKey = `evt_${evt.dayName}_${stageVal}`;
-            const isDone = state.completedEventStages && state.completedEventStages[stageKey];
-            
-            if (isToday) {
-                return `
-                    <button onclick="runEventStage('${evt.exKey}', ${stageVal}, '${stageKey}', '${evt.title}')" class="px-3 py-1.5 rounded-xl border text-xs font-black transition-transform active:scale-95 flex items-center gap-1 ${isDone ? 'bg-emerald-500/20 border-emerald-500 text-emerald-600 dark:text-emerald-400' : 'bg-white dark:bg-slate-800 border-[var(--border-color)] text-slate-700 dark:text-slate-200'}">
-                        <span>${stageVal}</span>
-                        ${isDone ? '<i class="fa-solid fa-check text-[10px]"></i>' : ''}
-                    </button>
-                `;
-            } else {
-                return `
-                    <button disabled class="px-3 py-1.5 rounded-xl border text-xs font-bold bg-slate-200 dark:bg-slate-800 text-slate-400 border-slate-300 dark:border-slate-700 cursor-not-allowed flex items-center gap-1">
-                        <i class="fa-solid fa-lock text-[10px]"></i>
-                        <span>${stageVal}</span>
-                    </button>
-                `;
-            }
-        }).join('<span class="text-slate-400 font-bold">→</span>');
-
-        card.innerHTML = `
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="font-extrabold text-xs text-slate-500 uppercase">${evt.dayName}</span>
-                    <span class="text-slate-400">—</span>
-                    <span class="font-black text-sm text-slate-800 dark:text-slate-100">${evt.title}</span>
-                    ${isToday ? '<span class="bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">TODAY ACTIVE</span>' : '<span class="bg-slate-200 dark:bg-slate-700 text-slate-500 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase"><i class="fa-solid fa-lock mr-1"></i>LOCKED</span>'}
-                </div>
-                <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${evt.tag === 'Legs' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' : evt.tag === 'Hard' ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300' : 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'}">${evt.tag}</span>
-            </div>
-
-            <div class="flex items-center gap-2 overflow-x-auto py-1">
-                ${stagesHTML}
-            </div>
-
-            <div class="text-[10px] text-slate-400 uppercase font-extrabold tracking-wider">
-                ${ex ? ex.name.toUpperCase() : ''} • ${evt.unit}
-            </div>
-        `;
-        container.appendChild(card);
-    });
+function monday(date = new Date()) {
+    const start = new Date(date);
+    start.setHours(0,0,0,0);
+    start.setDate(start.getDate() - (start.getDay()+6)%7);
+    return start;
 }
-
-function runEventStage(exKey, val, stageKey, eventTitle) {
-    selectedRoutine = [{ key: exKey, value: val, isEvent: true, eventStageKey: stageKey, eventTitle: eventTitle }];
+function syncWeek() {
+    const start = monday();
+    const next = new Date(start);
+    next.setDate(next.getDate()+7);
+    if (state.weekStart !== start.getTime()) {
+        // Older saves used a rolling expiry. Honor unexpired guided rewards on migration.
+        if (state.weekStart || !(state.questsResetTime > Date.now())) state.completedQuests = {};
+        state.completedEventStages = {};
+        state.weekStart = start.getTime();
+    }
+    state.completedQuests ||= {};
+    state.questsResetTime = next.getTime();
+}
+const weeklyGoals = [
+    {key:'attendance', title:'Show up twice', target:2, unit:'training days', xp:35},
+    {key:'variety', title:'Explore the exercise library', target:4, unit:'different exercises', xp:45},
+    {key:'sessions', title:'Finish three workouts', target:3, unit:'sessions', xp:55}
+];
+function weeklyTotals() {
+    const logs = state.history.filter(h => h.timestamp >= state.weekStart && h.timestamp < state.questsResetTime &&
+        Object.values(h.exStats || {}).some(v => v > 0));
+    return {
+        attendance:new Set(logs.map(h => new Date(h.timestamp).toDateString())).size,
+        variety:new Set(logs.flatMap(h => Object.keys(h.exStats).filter(k => h.exStats[k]>0))).size,
+        sessions:logs.length
+    };
+}
+function renderWeeklyGoals() {
+    const totals = weeklyTotals();
+    document.getElementById('questResetTimer').textContent = new Date(state.questsResetTime).toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+    document.getElementById('weekly-goals').innerHTML = weeklyGoals.map(g => {
+        const done = !!state.completedQuests[g.key];
+        const value = Math.min(g.target,totals[g.key]);
+        return `<article class="session-card"><small>+${g.xp} XP</small><h4>${g.title}</h4><progress value="${value}" max="${g.target}"></progress><p>${value} / ${g.target} ${g.unit}</p><button onclick="claimWeekly('${g.key}')" ${done || value<g.target?'disabled':''}>${done?'Claimed':value===g.target?'Claim bonus':'In progress'}</button></article>`;
+    }).join('');
+}
+function claimWeekly(key) {
+    syncWeek();
+    const goal = weeklyGoals.find(g => g.key === key);
+    if (!goal || state.completedQuests[key] || weeklyTotals()[key]<goal.target) return;
+    state.completedQuests[key]=true;
+    state.points+=goal.xp;
+    saveState();
+}
+function eventKey(evt, value) {return state.weekStart + '_' + evt.dayIdx + '_' + value;}
+function stageXP(evt,value) {return evt.exKey==='plank'?Math.round(value/2):value;}
+function renderWeeklyEvents() {
+    const today = new Date().getDay();
+    const todayEvent = WEEKLY_EVENTS_CONFIG.find(evt=>evt.dayIdx===today);
+    const cleared = Object.keys(state.completedEventStages || {}).filter(k=>k.startsWith(state.weekStart+'_')).length;
+    document.getElementById('event-week').textContent = (todayEvent?'Today · '+todayEvent.title:'Next event · Squat Monday') + '  /  '+cleared+' of 20 stages cleared';
+    document.getElementById('eventsListContainer').innerHTML = WEEKLY_EVENTS_CONFIG.map(evt=>{
+        const active = evt.dayIdx===today;
+        const buttons = evt.stages.map(value=>{
+            const key = eventKey(evt,value);
+            const done = !!state.completedEventStages[key];
+            return `<button ${!active || done?'disabled':''} onclick="runEventStage(${evt.dayIdx},${value})"><strong>${value} ${evt.unit.toLowerCase()}</strong><small>${done?'✓ Cleared':'+'+stageXP(evt,value)+' XP'}</small></button>`;
+        }).join('');
+        return `<article class="event-day ${active?'active':''}"><small>${evt.dayName} · ${evt.tag}</small><h3>${evt.title}</h3><div class="stage-row">${buttons}</div></article>`;
+    }).join('');
+}
+function runEventStage(day, value) {
+    syncWeek();
+    const evt = WEEKLY_EVENTS_CONFIG.find(e=>e.dayIdx===day);
+    if (!evt || day!==new Date().getDay() || !evt.stages.includes(value)) return;
+    const key = eventKey(evt,value);
+    if (state.completedEventStages[key]) return;
+    selectedRoutine = [{key:evt.exKey,value,isEvent:true,eventStageKey:key,eventTitle:evt.title}];
     startRoutineExecution();
 }
 
@@ -905,11 +838,13 @@ function start100sTimer() {
     document.getElementById("blitzSetupView").classList.add("hidden");
     document.getElementById("blitzTimerView").classList.remove("hidden");
 
+    clearInterval(blitzTimerInterval);
+    const end = Date.now()+100000;
     let timeLeft = 100;
     document.getElementById("blitzCountdown").innerText = timeLeft;
 
     blitzTimerInterval = setInterval(() => {
-        timeLeft--;
+        timeLeft = Math.max(0, Math.ceil((end-Date.now())/1000));
         document.getElementById("blitzCountdown").innerText = timeLeft;
         if (timeLeft <= 0) {
             clearInterval(blitzTimerInterval);
@@ -921,7 +856,7 @@ function start100sTimer() {
 
 function submit100sResult() {
     const reps = parseInt(document.getElementById("blitzRepsInput").value) || 0;
-    if (reps < 0) return;
+    if (!blitzSelectedExKey || !Number.isSafeInteger(reps) || reps <= 0) {alert("Enter a positive repetition count.");return;}
 
     const kcal = calculateKcal(blitzSelectedExKey, reps, state.mass, state.height);
     const xp = Math.max(10, reps);
@@ -946,6 +881,7 @@ function submit100sResult() {
         exStats: exStatObj
     });
 
+    blitzSelectedExKey = null;
     saveState();
     closeModal("blitzModal");
     alert(`Blitz Completed! 🎉
@@ -1269,6 +1205,8 @@ function updateAcceptButtonState(isEnabled) {
 }
 
 function acceptSelectedQuest() {
+    syncWeek();
+    if (selectedQuestTemp && state.completedQuests[selectedQuestTemp.questId]) return;
     if (!selectedQuestTemp) return;
 
     if (selectedQuestTemp.hasDumbbell && (!selectedQuestTemp.dbMass || selectedQuestTemp.dbMass <= 0)) {
@@ -1298,6 +1236,7 @@ let execElapsedSeconds = 0;
 let execCurrentIndex = 0;
 let execIsRest = false;
 let execRestSecondsLeft = 0;
+let execRestEnd = 0;
 
 function startRoutineExecution() {
     if (selectedRoutine.length === 0) return;
@@ -1309,19 +1248,20 @@ function startRoutineExecution() {
     document.getElementById("executionOverlay").classList.remove("hidden");
     
     execStartTime = Date.now();
+    updateExecLoop();
     execInterval = setInterval(updateExecLoop, 1000);
 
     loadExecStep();
 }
 
 function updateExecLoop() {
-    execElapsedSeconds++;
+    execElapsedSeconds = Math.max(0, Math.floor((Date.now() - execStartTime) / 1000));
     const mins = String(Math.floor(execElapsedSeconds / 60)).padStart(2, '0');
     const secs = String(execElapsedSeconds % 60).padStart(2, '0');
     document.getElementById("execTimer").innerText = `${mins}:${secs}`;
 
     let totalKcalSoFar = 0;
-    for (let i = 0; i < execCurrentIndex; i++) {
+    for (let i = 0; i < execCurrentIndex + Number(execIsRest); i++) {
         const item = selectedRoutine[i];
         let kcal = calculateKcal(item.key, item.value, state.mass, state.height, item.dbMass || 10);
         totalKcalSoFar += kcal;
@@ -1329,7 +1269,7 @@ function updateExecLoop() {
     document.getElementById("execKcal").innerText = totalKcalSoFar.toFixed(1);
 
     if (execIsRest) {
-        execRestSecondsLeft--;
+        execRestSecondsLeft = Math.max(0, Math.ceil((execRestEnd - Date.now()) / 1000));
         document.getElementById("execMainValue").innerText = execRestSecondsLeft;
         if (execRestSecondsLeft <= 0) {
             execIsRest = false;
@@ -1374,6 +1314,7 @@ function nextExerciseStep() {
     if (execCurrentIndex < selectedRoutine.length - 1 && state.restTime > 0) {
         execIsRest = true;
         execRestSecondsLeft = parseInt(state.restTime) || 15;
+        execRestEnd = Date.now() + execRestSecondsLeft * 1000;
         document.getElementById("execMainValue").innerText = execRestSecondsLeft;
         document.getElementById("execMainUnit").innerText = "REST & RECOVER";
         document.getElementById("execExName").innerText = "Next: " + EXERCISES_DATABASE[selectedRoutine[execCurrentIndex + 1].key].name;
@@ -1386,6 +1327,7 @@ function nextExerciseStep() {
 }
 
 function finishWorkoutExecution() {
+    execElapsedSeconds = Math.max(0, Math.floor((Date.now() - execStartTime) / 1000));
     clearInterval(execInterval);
     document.getElementById("executionOverlay").classList.add("hidden");
 
@@ -1408,7 +1350,7 @@ function finishWorkoutExecution() {
             exStatThisSession[item.key] += item.value;
         }
         
-        if (item.isEvent) {
+        if (item.isEvent && !state.completedEventStages[item.eventStageKey]) {
             if (item.key === "plank") {
                 gainedXP += Math.round(item.value * 0.5);
             } else {
@@ -1418,7 +1360,7 @@ function finishWorkoutExecution() {
                 if (!state.completedEventStages) state.completedEventStages = {};
                 state.completedEventStages[item.eventStageKey] = true;
             }
-        } else if (!activeExecutionQuestId) {
+        } else if (!item.isEvent && !activeExecutionQuestId) {
             gainedXP += Math.max(1, Math.round(kcal));
         }
 
@@ -1473,35 +1415,33 @@ function loadTrack(idx) {
     document.getElementById("trackAuthor").innerText = `Author: ${track.artist}`;
 }
 
+function playCurrentTrack() {
+    bgAudio.play().catch(error => {
+        if (error.name !== 'AbortError') document.getElementById('trackAuthor').textContent = 'Playback unavailable. Press play to retry.';
+    });
+}
 function toggleAudio() {
-    if (!bgAudio.src) loadTrack(0);
-    
-    if (bgAudio.paused) {
-        bgAudio.play().then(() => {
-            document.getElementById("playAudioIcon").className = "fa-solid fa-pause text-sm ml-0.5";
-        }).catch(e => console.log("Audio playback error", e));
-    } else {
-        bgAudio.pause();
-        document.getElementById("playAudioIcon").className = "fa-solid fa-play text-sm ml-0.5";
-    }
+    if (bgAudio.paused) playCurrentTrack();
+    else bgAudio.pause();
 }
-
 function nextTrack() {
-    currentTrackIdx = (currentTrackIdx + 1) % NO_COPYRIGHT_PLAYLIST.length;
-    loadTrack(currentTrackIdx);
-    bgAudio.play();
-    document.getElementById("playAudioIcon").className = "fa-solid fa-pause text-sm ml-0.5";
+    loadTrack((currentTrackIdx + 1) % NO_COPYRIGHT_PLAYLIST.length);
+    playCurrentTrack();
 }
-
 function prevTrack() {
-    currentTrackIdx = (currentTrackIdx - 1 + NO_COPYRIGHT_PLAYLIST.length) % NO_COPYRIGHT_PLAYLIST.length;
-    loadTrack(currentTrackIdx);
-    bgAudio.play();
-    document.getElementById("playAudioIcon").className = "fa-solid fa-pause text-sm ml-0.5";
+    loadTrack((currentTrackIdx + NO_COPYRIGHT_PLAYLIST.length - 1) % NO_COPYRIGHT_PLAYLIST.length);
+    playCurrentTrack();
+}
+bgAudio.addEventListener('ended', nextTrack);
+for (const event of ['play', 'pause', 'ended', 'error']) {
+    bgAudio.addEventListener(event, () => {
+        document.getElementById('playAudioIcon').className = bgAudio.paused ? 'fa-solid fa-play text-sm' : 'fa-solid fa-pause text-sm';
+    });
 }
 
 /* ==================== 12. GUI NAVIGATION & THEMES ==================== */
 function switchTab(tabId) {
+    if (tabId==="events" || tabId==="quests") {syncWeek(); renderWeeklyEvents(); renderWeeklyGoals(); renderQuests();}
     document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
     document.getElementById(tabId + "Tab").classList.remove("hidden");
 
@@ -1607,6 +1547,8 @@ function openModal(id) {
 }
 
 function closeModal(id) {
+    if (id==="blitzModal") {clearInterval(blitzTimerInterval); blitzSelectedExKey=null;}
+    if (id === "exerciseInfoModal") stopDemo();
     document.getElementById(id).classList.add("hidden");
 }
 

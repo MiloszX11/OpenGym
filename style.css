@@ -96,19 +96,6 @@ body.dark.style-aero {
     box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
 }
 
-/* Vector Muscle Highlights on White Background */
-.muscle-target {
-    transition: fill 0.4s ease, filter 0.4s ease;
-}
-.muscle-outline {
-    stroke: #000000 !important;
-    stroke-width: 1.5px !important;
-}
-.muscle-primary { fill: #ef4444 !important; filter: drop-shadow(0px 0px 3px rgba(239, 68, 68, 0.8)); }
-.muscle-secondary { fill: #eab308 !important; filter: drop-shadow(0px 0px 3px rgba(234, 179, 8, 0.7)); }
-.muscle-tertiary { fill: #22c55e !important; filter: drop-shadow(0px 0px 3px rgba(34, 197, 94, 0.7)); }
-.muscle-none { fill: #ffffff !important; }
-
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -122,3 +109,26 @@ body.dark.style-aero {
 .dark ::-webkit-scrollbar-thumb {
     background: #475569;
 }
+.atlas-body{width:clamp(85px,25vw,145px);height:auto;display:block;margin:auto}
+.atlas-body .muscle-target{fill:#dfebef;stroke:#7892a0;stroke-width:.38;stroke-linejoin:round;transition:fill .28s}
+.atlas-legend{display:flex;align-items:center;justify-content:center;gap:.6rem;font-size:.75rem}
+.atlas-legend span{width:5em;height:.6em;border-radius:1em;background:linear-gradient(90deg,#fbe5eb,#a71b41)}
+.movement{background:#102b37;color:white;border-radius:1rem;padding:.8rem;display:grid;gap:.4rem}
+.movement canvas{width:min(100%,290px);margin:auto;display:block}
+.movement figcaption{font-size:.88rem}
+.movement button{justify-self:start;color:#9deade;font-size:.8rem;padding:.35rem .6rem;border:1px solid #568781;border-radius:.5rem}
+.section-name{font-size:1rem;font-weight:800;margin-bottom:.65rem}
+.session-grid,.stage-row{display:grid;gap:.65rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))}
+.session-card,.event-day{padding:1rem;border:1px solid var(--border-color);border-radius:1rem;background:var(--card-bg)}
+.session-card h4,.event-day h3{font-weight:800;margin:.25rem 0 .65rem}
+.session-card small,.event-day small{font-size:.74rem;letter-spacing:.04em;font-weight:700}
+.session-card progress{width:100%;height:.55rem;accent-color:#17857a}
+.session-card p{font-size:.8rem;margin:.25rem 0 .7rem}
+.session-card button,.stage-row button{border:1px solid var(--border-color);border-radius:.6rem;padding:.45rem .75rem;background:var(--bg-main);font-size:.83rem}
+.session-card button:enabled,.event-day.active .stage-row button:enabled{background:#13786f;color:white}
+.stage-row{grid-template-columns:repeat(auto-fit,minmax(85px,1fr))}
+.stage-row small{display:block}
+.event-day.active{border-left:4px solid #19968b}
+#rank-ring{width:5.5rem;aspect-ratio:1;margin:auto;border-radius:50%;padding:.4rem;background:conic-gradient(var(--rank-color) var(--progress),#98a7ae44 0)}
+#rank-mark{display:grid;height:100%;place-items:center;border-radius:50%;background:var(--card-bg);font:800 2rem monospace;color:var(--rank-color)}
+#rank-distance{font-weight:700;font-size:.9rem}
