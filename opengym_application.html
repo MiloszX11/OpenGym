@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en" class="dark theme-round mode-multicolor">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenGym - Workout Routine & Science-Backed MET Tracker</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- THEME MODES --- */
+        /* Light Mode */
+        html.light body {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+        }
+
+        /* OLED Black Mode */
+        html.oled-black body {
+            background-color: #000000 !important;
+            color: #f8fafc !important;
+        }
+        html.oled-black .glass-panel,
+        html.oled-black .modal-panel {
+            background: #050505 !important;
+            border-color: #222222 !important;
+        }
+
+        /* --- DESIGN STYLES --- */
+        
+        /* 1. ROUND STYLE (Modern Glassmorphism) */
+        html.theme-round .glass-panel,
+        html.theme-round .modal-panel {
+            border-radius: 1rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        html.theme-round .btn-ui {
+            border-radius: 0.75rem;
+        }
+
+        /* 2. METRO STYLE (Windows 10 Sharp, High Contrast & Emoji Fixed) */
+        html.theme-metro * {
+            border-radius: 0px !important;
+            font-family: 'Segoe UI', 'Inter', apple color emoji, segoe ui emoji, segoe ui symbol, sans-serif !important;
+        }
+        html.theme-metro .glass-panel {
+            background: #111827;
+            border: 2px solid #374151;
+            box-shadow: none !important;
+        }
+        html.light.theme-metro body {
+            background-color: #ffffff !important;
+        }
+        html.light.theme-metro .glass-panel {
+            background: #ffffff;
+            border: 2px solid #000000;
+        }
+        html.theme-metro .btn-ui {
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        /* 3. AERO STYLE (Windows 7 Glossy Glass 2009) */
+        html.theme-aero .glass-panel {
+            border-radius: 0.75rem;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.35), 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        html.light.theme-aero .glass-panel {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.85) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 1), 0 8px 24px 0 rgba(0, 0, 0, 0.08);
+        }
+        html.theme-aero .btn-ui {
+            border-radius: 0.5rem;
+            background-image: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.1) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        /* --- MULTICOLOR ACCENT CARDS --- */
+        html.mode-multicolor .card-squats { border-left: 4px solid #f97316 !important; }
+        html.mode-multicolor .card-pushups { border-left: 4px solid #3b82f6 !important; }
+        html.mode-multicolor .card-situps { border-left: 4px solid #8b5cf6 !important; }
+        html.mode-multicolor .card-burpees { border-left: 4px solid #ef4444 !important; }
+        html.mode-multicolor .card-jumpingjacks { border-left: 4px solid #10b981 !important; }
+        html.mode-multicolor .card-skippingrope { border-left: 4px solid #ec4899 !important; }
+        html.mode-multicolor .card-forwardbends { border-left: 4px solid #14b8a6 !important; }
+        html.mode-multicolor .card-plank { border-left: 4px solid #6366f1 !important; }
+        html.mode-multicolor .card-mountainclimbers { border-left: 4px solid #eab308 !important; }
+        html.mode-multicolor .card-lunges { border-left: 4px solid #06b6d4 !important; }
+
+        /* Background grid pattern */
+        .bg-grid-pattern {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .light .bg-grid-pattern {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col transition-colors duration-300 light:bg-white light:text-slate-900 bg-grid-pattern">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 light:border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- LOGO & APP BRAND -->
+            <div class="flex items-center space-x-3">
+                <div class="relative group">
+                    <div id="appLogoContainer" class="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-600 via-blue-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200 overflow-hidden">
+                        <i class="fa-solid fa-dumbbell text-2xl text-white"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 light:from-slate-900 light:to-slate-600 bg-clip-text text-transparent">
+                        Open<span class="text-brand-500">Gym</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 font-semibold">Custom Workout Routine & MET Engine</p>
+                </div>
+            </div>
+
+            <!-- TOP RIGHT BUTTONS -->
+            <div class="flex items-center space-x-3">
+                <!-- Quests Button -->
+                <button id="questsBtn" class="btn-ui relative p-2.5 bg-slate-800/80 hover:bg-slate-700/80 light:bg-slate-100 light:hover:bg-slate-200 text-slate-200 light:text-slate-700 transition-all border border-slate-700/50 light:border-slate-300 flex items-center space-x-2">
+                    <i class="fa-solid fa-scroll text-amber-400 text-lg"></i>
+                    <span class="hidden md:inline font-semibold text-sm">Quests</span>
+                    <span id="userPointsBadge" class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold px-2 py-0.5 rounded-full ml-1">0 pts</span>
+                </button>
+
+                <!-- Settings Button (Gear Icon) -->
+                <button id="settingsBtn" class="btn-ui p-2.5 bg-slate-800/80 hover:bg-slate-700/80 light:bg-slate-100 light:hover:bg-slate-200 text-slate-200 light:text-slate-700 transition-all border border-slate-700/50 light:border-slate-300 flex items-center space-x-2">
+                    <i class="fa-solid fa-gear text-lg text-brand-500"></i>
+                    <span class="hidden md:inline font-semibold text-sm">Settings</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- CATEGORY TABS -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800/60 light:border-slate-200/60">
+            <nav class="flex space-x-2 overflow-x-auto py-2.5 scrollbar-none" id="categoryNav">
+                <button data-category="All" class="nav-tab btn-ui px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap bg-brand-600 text-white shadow-md shadow-brand-600/30">
+                    <i class="fa-solid fa-border-all mr-2"></i>All Exercises
+                </button>
+                <button data-category="Strength" class="nav-tab btn-ui px-4 py-2 text-sm font-semibold text-slate-400 hover:text-white light:hover:text-slate-900 transition-all whitespace-nowrap">
+                    <i class="fa-solid fa-dumbbell mr-2"></i>Strength
+                </button>
+                <button data-category="Cardio" class="nav-tab btn-ui px-4 py-2 text-sm font-semibold text-slate-400 hover:text-white light:hover:text-slate-900 transition-all whitespace-nowrap">
+                    <i class="fa-solid fa-heart-pulse mr-2"></i>Cardio
+                </button>
+                <button data-category="Flexibility" class="nav-tab btn-ui px-4 py-2 text-sm font-semibold text-slate-400 hover:text-white light:hover:text-slate-900 transition-all whitespace-nowrap">
+                    <i class="fa-solid fa-person-stretching mr-2"></i>Flexibility
+                </button>
+                <button data-category="Isometric" class="nav-tab btn-ui px-4 py-2 text-sm font-semibold text-slate-400 hover:text-white light:hover:text-slate-900 transition-all whitespace-nowrap">
+                    <i class="fa-solid fa-stopwatch mr-2"></i>Isometric
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN BODY CONTENT -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- USER MASS WARNING BANNER -->
+        <div id="massWarningBanner" class="hidden p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center justify-between text-amber-400 text-sm font-semibold">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                <span>Please set your body mass in Settings. It is required for MET calorie estimation.</span>
+            </div>
+            <button onclick="openSettingsTab('tab-data')" class="px-3 py-1 bg-amber-500 text-slate-950 font-bold rounded-lg text-xs hover:bg-amber-400 transition-colors">Set Mass</button>
+        </div>
+
+        <!-- ROUTINE BUILDER SECTION -->
+        <section class="glass-panel p-6 border border-slate-800 light:border-slate-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-100 light:text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-brand-500"></i> Your Selected Routine
+                    </h2>
+                    <p class="text-xs text-slate-400">Add exercises from below, set your reps/duration, and click Start Workout.</p>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                    <button id="clearRoutineBtn" class="btn-ui px-3.5 py-2 bg-slate-800 hover:bg-slate-700 light:bg-slate-200 light:hover:bg-slate-300 text-slate-300 light:text-slate-700 text-xs font-bold transition-all">
+                        <i class="fa-solid fa-trash-can mr-1.5"></i> Clear List
+                    </button>
+                    <button id="startWorkoutBtn" class="btn-ui px-6 py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-sm shadow-lg shadow-brand-600/30 flex items-center space-x-2 transition-transform active:scale-95">
+                        <i class="fa-solid fa-play text-base"></i>
+                        <span>Start Exercise Routine</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Routine Queue List -->
+            <div id="routineQueueList" class="space-y-3 min-h-[80px]">
+                <!-- Dynamically Populated Queue Items -->
+            </div>
+        </section>
+
+        <!-- EXERCISES SELECTION GRID -->
+        <section>
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-100 light:text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-bolt text-brand-500"></i> Exercise Catalog
+                    </h2>
+                    <p class="text-xs text-slate-400">Click "+ Add to Routine" to build your workout queue.</p>
+                </div>
+            </div>
+
+            <div id="exerciseGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Dynamically Populated -->
+            </div>
+        </section>
+
+        <!-- DASHBOARD STATS -->
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="glass-panel p-5 flex items-center space-x-4 border border-slate-800 light:border-slate-200">
+                <div class="p-3.5 rounded-xl bg-orange-500/10 text-orange-500 border border-orange-500/20">
+                    <i class="fa-solid fa-fire text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Total Burned</p>
+                    <h3 id="statCalories" class="text-2xl font-black tracking-tight text-slate-100 light:text-slate-900">0 <span class="text-sm font-semibold text-slate-400">kcal</span></h3>
+                </div>
+            </div>
+
+            <div class="glass-panel p-5 flex items-center space-x-4 border border-slate-800 light:border-slate-200">
+                <div class="p-3.5 rounded-xl bg-brand-500/10 text-brand-500 border border-brand-500/20">
+                    <i class="fa-solid fa-list-check text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Completed Sets</p>
+                    <h3 id="statWorkouts" class="text-2xl font-black tracking-tight text-slate-100 light:text-slate-900">0</h3>
+                </div>
+            </div>
+
+            <div class="glass-panel p-5 flex items-center space-x-4 border border-slate-800 light:border-slate-200">
+                <div class="p-3.5 rounded-xl bg-blue-500/10 text-blue-500 border border-blue-500/20">
+                    <i class="fa-solid fa-clock text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Active Time</p>
+                    <h3 id="statTime" class="text-2xl font-black tracking-tight text-slate-100 light:text-slate-900">0 <span class="text-sm font-semibold text-slate-400">min</span></h3>
+                </div>
+            </div>
+
+            <div class="glass-panel p-5 flex items-center space-x-4 border border-slate-800 light:border-slate-200">
+                <div class="p-3.5 rounded-xl bg-purple-500/10 text-purple-500 border border-purple-500/20">
+                    <i class="fa-solid fa-weight-scale text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Body BMI</p>
+                    <h3 id="statBmi" class="text-2xl font-black tracking-tight text-slate-100 light:text-slate-900">--</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOG HISTORY TABLE -->
+        <section class="glass-panel p-6 border border-slate-800 light:border-slate-200">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 bg-brand-500/10 rounded-xl text-brand-500">
+                        <i class="fa-solid fa-clock-rotate-left text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-100 light:text-slate-900">Activity History</h2>
+                        <p class="text-xs text-slate-400">Chronological log of completed workouts</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300 light:text-slate-700">
+                    <thead class="bg-slate-900/60 light:bg-slate-100 text-xs uppercase font-semibold text-slate-400 border-b border-slate-800 light:border-slate-200">
+                        <tr>
+                            <th class="p-3.5">Exercise</th>
+                            <th class="p-3.5">Category</th>
+                            <th class="p-3.5">Volume</th>
+                            <th class="p-3.5">Est. Energy</th>
+                            <th class="p-3.5">Date & Time</th>
+                            <th class="p-3.5 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody" class="divide-y divide-slate-800/50 light:divide-slate-200/50">
+                        <!-- History rows -->
+                    </tbody>
+                </table>
+                <div id="emptyHistoryMsg" class="text-center py-12 text-slate-500 text-sm">
+                    <i class="fa-solid fa-box-open text-3xl mb-2 opacity-50 block"></i>
+                    No workout logs found. Complete a routine to view history!
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto border-t border-slate-800/80 light:border-slate-200 py-6 text-center text-xs text-slate-500 glass-panel">
+        <p>© 2026 OpenGym • MET Formula Science-Backed Calorie Estimation Engine</p>
+    </footer>
+
+    <!-- ACTIVE WORKOUT SCREEN OVERLAY (MATCHING YOUR EXACT SKETCH SPECIFICATION) -->
+    <div id="workoutPlayerModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-xl hidden">
+        <div class="relative w-full max-w-2xl h-[85vh] max-h-[700px] flex flex-col justify-between p-6 sm:p-10 border border-slate-800 light:border-slate-200 rounded-3xl bg-slate-900 light:bg-white text-slate-100 light:text-slate-900 shadow-2xl overflow-hidden select-none">
+            
+            <!-- TOP BAR (CORNER DATA) -->
+            <div class="flex items-center justify-between text-lg sm:text-xl font-bold tracking-tight text-blue-500 dark:text-blue-400">
+                <!-- Top Left: Elapsed Workout Time -->
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs uppercase text-slate-400 font-semibold tracking-wider">time:</span>
+                    <span id="playerTotalTime" class="text-2xl font-black">00:00</span>
+                </div>
+
+                <!-- Top Right: Live Accumulated Calories -->
+                <div class="flex items-center space-x-1">
+                    <span id="playerTotalKcal" class="text-2xl font-black text-blue-500 dark:text-blue-400">0.0</span>
+                    <span class="text-lg font-bold">kcal</span>
+                </div>
+            </div>
+
+            <!-- CENTER WORKOUT DISPLAY (HUGE CIRCLE WITH REPS / TIMER) -->
+            <div class="relative my-auto flex flex-col items-center justify-center">
+                <!-- Main Circle Visual -->
+                <div id="playerCircleBorder" class="w-64 h-64 sm:w-80 sm:h-80 rounded-full border-8 border-cyan-500 light:border-cyan-500 flex flex-col items-center justify-center p-6 text-center shadow-2xl transition-all duration-300 relative bg-slate-900/40 light:bg-slate-50">
+                    
+                    <!-- Reps or Timer Counter -->
+                    <div id="playerMainNumber" class="text-6xl sm:text-7xl font-black tracking-tight text-blue-600 dark:text-blue-400 mb-2">
+                        15
+                    </div>
+
+                    <!-- Exercise Name -->
+                    <div id="playerExerciseName" class="text-2xl sm:text-3xl font-extrabold text-blue-600 dark:text-blue-400 capitalize tracking-wide">
+                        push-ups
+                    </div>
+
+                    <!-- Exercise Icon -->
+                    <div id="playerExerciseIcon" class="mt-3 text-3xl text-cyan-500 light:text-cyan-600">
+                        <!-- Custom SVG / Icon rendered via JS -->
+                    </div>
+                </div>
+
+                <!-- Active Rest Overlay State -->
+                <div id="playerRestOverlay" class="absolute inset-0 bg-slate-900/90 light:bg-white/90 rounded-full flex flex-col items-center justify-center text-center p-6 hidden">
+                    <p class="text-sm uppercase font-bold text-slate-400 tracking-widest mb-1">REST PERIOD</p>
+                    <h3 id="playerRestCountdown" class="text-6xl font-black text-emerald-400">15s</h3>
+                    <p class="text-xs text-slate-400 mt-2">Get ready for next set!</p>
+                </div>
+            </div>
+
+            <!-- BOTTOM BAR (PREVIOUS & NEXT EXERCISES) -->
+            <div class="flex items-end justify-between text-sm sm:text-base font-bold text-blue-500 dark:text-blue-400">
+                <!-- Bottom Left: Previous Exercise -->
+                <div class="text-left">
+                    <p class="text-xs uppercase text-slate-400 font-semibold tracking-wider mb-1">previous:</p>
+                    <p id="playerPreviousName" class="text-lg font-extrabold capitalize text-slate-300 light:text-slate-700">none</p>
+                </div>
+
+                <!-- Action Controls Center -->
+                <div class="flex items-center space-x-3">
+                    <button id="playerDoneBtn" onclick="nextWorkoutStep()" class="btn-ui px-8 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-base shadow-lg shadow-cyan-500/30 transition-transform active:scale-95">
+                        <span id="playerDoneText">Complete Set ✓</span>
+                    </button>
+                    <button onclick="quitWorkoutPlayer()" class="btn-ui p-3 bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white transition-colors">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Bottom Right: Next Exercise -->
+                <div class="text-right">
+                    <p class="text-xs uppercase text-slate-400 font-semibold tracking-wider mb-1">next:</p>
+                    <p id="playerNextName" class="text-lg font-extrabold capitalize text-slate-300 light:text-slate-700">squats</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL (⚙️) -->
+    <div id="settingsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden">
+        <div class="modal-panel bg-slate-900 light:bg-white max-w-xl w-full border border-slate-800 light:border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            
+            <div class="px-6 py-4 border-b border-slate-800 light:border-slate-200 flex items-center justify-between bg-slate-900/50 light:bg-slate-50">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-gear text-brand-500 text-xl"></i>
+                    <h3 class="font-bold text-lg text-slate-100 light:text-slate-900">Settings</h3>
+                </div>
+                <button id="closeSettingsBtn" class="text-slate-400 hover:text-white light:hover:text-slate-900 text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="flex border-b border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-slate-100 px-6">
+                <button data-tab="tab-gui" class="settings-tab py-3 px-4 text-xs font-bold uppercase tracking-wider border-b-2 border-brand-500 text-brand-500">GUI & Colors</button>
+                <button data-tab="tab-routine" class="settings-tab py-3 px-4 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200 border-b-2 border-transparent">Workout</button>
+                <button data-tab="tab-data" class="settings-tab py-3 px-4 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200 border-b-2 border-transparent">Physical Data</button>
+                <button data-tab="tab-export" class="settings-tab py-3 px-4 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200 border-b-2 border-transparent">Export / Import</button>
+                <button data-tab="tab-delete" class="settings-tab py-3 px-4 text-xs font-bold uppercase tracking-wider text-red-400 hover:text-red-300 border-b-2 border-transparent">Danger Zone</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="p-6 overflow-y-auto space-y-6">
+                
+                <!-- GUI SELECTION TAB -->
+                <div id="tab-gui" class="tab-content space-y-6">
+                    <!-- Multicolor Switch -->
+                    <div class="p-4 bg-slate-800/50 light:bg-slate-100 rounded-xl border border-slate-700/50 light:border-slate-300 flex items-center justify-between">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-100 light:text-slate-900">Multicolor Theme Accent</h4>
+                            <p class="text-xs text-slate-400">Gives every exercise its own unique vibrant color accent</p>
+                        </div>
+                        <input type="checkbox" id="multicolorToggle" onchange="toggleMulticolor(this.checked)" class="w-5 h-5 accent-brand-500 cursor-pointer">
+                    </div>
+
+                    <!-- Theme Mode -->
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Color Mode</h4>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button id="modeDarkBtn" onclick="setThemeMode('dark')" class="btn-ui p-3 bg-slate-800 text-slate-100 border-2 border-slate-700 flex flex-col items-center justify-center space-y-1 text-xs font-bold">
+                                <i class="fa-solid fa-moon text-lg text-brand-400"></i>
+                                <span>Dark</span>
+                            </button>
+                            <button id="modeLightBtn" onclick="setThemeMode('light')" class="btn-ui p-3 bg-slate-100 text-slate-900 border-2 border-slate-300 flex flex-col items-center justify-center space-y-1 text-xs font-bold">
+                                <i class="fa-solid fa-sun text-lg text-amber-500"></i>
+                                <span>Light White</span>
+                            </button>
+                            <button id="modeOledBtn" onclick="setThemeMode('oled')" class="btn-ui p-3 bg-black text-slate-100 border-2 border-slate-800 flex flex-col items-center justify-center space-y-1 text-xs font-bold">
+                                <i class="fa-solid fa-circle text-lg text-blue-500"></i>
+                                <span>Pure OLED</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Visual Style -->
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">UI Design Style</h4>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button id="styleRoundBtn" onclick="setThemeStyle('round')" class="btn-ui p-3 bg-slate-800 border-2 border-slate-700 rounded-xl flex flex-col items-center justify-center space-y-1 text-xs font-bold">
+                                <i class="fa-solid fa-shapes text-lg text-emerald-400"></i>
+                                <span>Round</span>
+                            </button>
+                            <button id="styleAeroBtn" onclick="setThemeStyle('aero')" class="btn-ui p-3 bg-slate-800/80 border-2 border-slate-700 rounded-lg flex flex-col items-center justify-center space-y-1 text-xs font-bold">
+                                <i class="fa-solid fa-window-restore text-lg text-cyan-400"></i>
+                                <span>Aero 2009</span>
+                            </button>
+                            <button id="styleMetroBtn" onclick="setThemeStyle('metro')" class="btn-ui p-3 bg-slate-800 border-2 border-slate-700 rounded-none flex flex-col items-center justify-center space-y-1 text-xs font-bold">
+                                <i class="fa-solid fa-border-all text-lg text-indigo-400"></i>
+                                <span>Metro</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROUTINE SETTINGS TAB -->
+                <div id="tab-routine" class="tab-content space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Rest Interval Duration (seconds)</label>
+                        <input type="number" id="restDurationInput" min="0" max="180" step="1" class="w-full bg-slate-800 light:bg-slate-100 border border-slate-700 light:border-slate-300 rounded-xl px-4 py-2.5 text-slate-100 light:text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="15">
+                        <p class="text-xs text-slate-500 mt-1">Default pause duration between exercises in your custom routine.</p>
+                    </div>
+                    <button id="saveRoutineSettingsBtn" class="btn-ui w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-lg shadow-brand-600/20 transition-all">
+                        Save Workout Settings
+                    </button>
+                </div>
+
+                <!-- PHYSICAL DATA TAB -->
+                <div id="tab-data" class="tab-content space-y-4 hidden">
+                    <p class="text-xs text-slate-400">Body mass is required to compute calorie expenditure using standard MET rates.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Body Mass (kg) *</label>
+                            <input type="number" id="userMass" min="20" max="300" step="0.5" class="w-full bg-slate-800 light:bg-slate-100 border border-slate-700 light:border-slate-300 rounded-xl px-4 py-2.5 text-slate-100 light:text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="e.g. 70">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Height (cm)</label>
+                            <input type="number" id="userHeight" min="100" max="250" step="1" class="w-full bg-slate-800 light:bg-slate-100 border border-slate-700 light:border-slate-300 rounded-xl px-4 py-2.5 text-slate-100 light:text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="e.g. 175">
+                        </div>
+                        <button id="saveDataBtn" class="btn-ui w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-lg shadow-brand-600/20 transition-all">
+                            Save Physical Profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- EXPORT / IMPORT TAB -->
+                <div id="tab-export" class="tab-content space-y-4 hidden">
+                    <div>
+                        <h4 class="text-sm font-semibold text-slate-300 light:text-slate-700 mb-1">Export Save File</h4>
+                        <p class="text-xs text-slate-400 mb-3">Download a backup file (.sav / .json) containing your progress, routine, and points.</p>
+                        <button id="exportSaveBtn" class="btn-ui w-full py-2.5 bg-slate-800 hover:bg-slate-700 light:bg-slate-200 light:hover:bg-slate-300 text-slate-100 light:text-slate-900 font-bold border border-slate-700 light:border-slate-300 flex items-center justify-center space-x-2 text-sm">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Export Save (.sav)</span>
+                        </button>
+                    </div>
+
+                    <hr class="border-slate-800 light:border-slate-200 my-4">
+
+                    <div>
+                        <h4 class="text-sm font-semibold text-slate-300 light:text-slate-700 mb-1">Import Save File</h4>
+                        <p class="text-xs text-slate-400 mb-3">Restore workout logs and preferences from file.</p>
+                        <input type="file" id="importFileInput" accept=".sav,.json" class="hidden">
+                        <button id="importSaveBtn" class="btn-ui w-full py-2.5 bg-slate-800 hover:bg-slate-700 light:bg-slate-200 light:hover:bg-slate-300 text-slate-100 light:text-slate-900 font-bold border border-slate-700 light:border-slate-300 flex items-center justify-center space-x-2 text-sm">
+                            <i class="fa-solid fa-upload"></i>
+                            <span>Import Save File</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- DANGER ZONE TAB -->
+                <div id="tab-delete" class="tab-content space-y-4 hidden">
+                    <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+                        <h4 class="text-sm font-bold text-red-400 flex items-center gap-2 mb-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Danger Zone
+                        </h4>
+                        <p class="text-xs text-slate-400">Permanently delete all local storage including saved logs, routine list, quests, and points.</p>
+                    </div>
+                    <button id="deleteDataBtn" class="btn-ui w-full py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-sm shadow-lg shadow-red-600/20 transition-all">
+                        Delete Browser Data
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- QUESTS MODAL (📜) -->
+    <div id="questsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden">
+        <div class="modal-panel bg-slate-900 light:bg-white max-w-xl w-full border border-slate-800 light:border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            
+            <div class="px-6 py-4 border-b border-slate-800 light:border-slate-200 flex items-center justify-between bg-slate-900/50 light:bg-slate-50">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-scroll text-amber-400 text-xl"></i>
+                    <h3 class="font-bold text-lg text-slate-100 light:text-slate-900">Weekly Quests & Challenges</h3>
+                </div>
+                <button id="closeQuestsBtn" class="text-slate-400 hover:text-white light:hover:text-slate-900 text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Quests List -->
+            <div class="p-6 overflow-y-auto space-y-4">
+                <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Weekly Reset</span>
+                        <p class="text-xs text-slate-400">Quests reset every 7 days. Your earned points are kept permanently!</p>
+                    </div>
+                    <span id="questResetTimer" class="font-mono text-xs font-bold text-amber-400 bg-amber-500/20 px-2.5 py-1 rounded-lg">Resetting...</span>
+                </div>
+
+                <div id="questsContainer" class="space-y-4">
+                    <!-- Dynamically Populated Quests -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+        /**
+         * OpenGym Engine
+         * Scientific MET Formulas & Custom Workout Routine Queue System
+         */
+
+        // PERFECTED SVG PUSH-UP ICON & EXERCISE CATALOG
+        const PUSHUPS_SVG_ICON = `<svg class="w-8 h-8 fill-current inline-block" viewBox="0 0 24 24"><path d="M21.5 15.5l-3-7a1 1 0 0 0-1.4-.5l-5.1 2.5L9.6 8.2a1 1 0 0 0-1.2-.2l-5 3a1 1 0 1 0 1 1.7l4.3-2.6 2.6 2.6a1 1 0 0 0 1.2.2l5.6-2.8 2.4 5.7a1 1 0 0 0 1 .6 1 1 0 0 0 1-1.3zM4 18h16a1 1 0 0 0 0-2H4a1 1 0 0 0 0 2z"/></svg>`;
+
+        const EXERCISES_DATABASE = [
+            {
+                id: 'squats',
+                name: 'Squats',
+                category: 'Strength',
+                type: 'reps',
+                met: 3.8,
+                secondsPerRep: 3,
+                iconType: 'fa',
+                icon: 'fa-person-dots-from-line',
+                cardClass: 'card-squats'
+            },
+            {
+                id: 'pushups',
+                name: 'Push-ups',
+                category: 'Strength',
+                type: 'reps',
+                met: 3.8,
+                secondsPerRep: 3,
+                iconType: 'svg',
+                icon: PUSHUPS_SVG_ICON,
+                cardClass: 'card-pushups'
+            },
+            {
+                id: 'situps',
+                name: 'Sit-ups',
+                category: 'Strength',
+                type: 'reps',
+                met: 3.8,
+                secondsPerRep: 3,
+                iconType: 'fa',
+                icon: 'fa-person-chalkboard',
+                cardClass: 'card-situps'
+            },
+            {
+                id: 'burpees',
+                name: 'Burpees (Full Push-Up)',
+                category: 'Cardio',
+                type: 'reps',
+                met: 7.5,
+                secondsPerRep: 6,
+                iconType: 'fa',
+                icon: 'fa-person-running',
+                cardClass: 'card-burpees'
+            },
+            {
+                id: 'jumpingjacks',
+                name: 'Jumping Jacks',
+                category: 'Cardio',
+                type: 'reps',
+                met: 7.5,
+                secondsPerRep: 1,
+                iconType: 'fa',
+                icon: 'fa-child-reaching',
+                cardClass: 'card-jumpingjacks'
+            },
+            {
+                id: 'skippingrope',
+                name: 'Skipping Rope',
+                category: 'Cardio',
+                type: 'reps',
+                met: 11.0,
+                secondsPerRep: 0.5,
+                iconType: 'fa',
+                icon: 'fa-arrows-spin',
+                cardClass: 'card-skippingrope'
+            },
+            {
+                id: 'mountainclimbers',
+                name: 'Mountain Climbers',
+                category: 'Cardio',
+                type: 'reps',
+                met: 8.0,
+                secondsPerRep: 1.5,
+                iconType: 'fa',
+                icon: 'fa-person-hiking',
+                cardClass: 'card-mountainclimbers'
+            },
+            {
+                id: 'lunges',
+                name: 'Lunges',
+                category: 'Strength',
+                type: 'reps',
+                met: 3.8,
+                secondsPerRep: 3,
+                iconType: 'fa',
+                icon: 'fa-person-walking-luggage',
+                cardClass: 'card-lunges'
+            },
+            {
+                id: 'forwardbends',
+                name: 'Forward Bends',
+                category: 'Flexibility',
+                type: 'reps',
+                met: 2.3,
+                secondsPerRep: 3,
+                iconType: 'fa',
+                icon: 'fa-person-falling',
+                cardClass: 'card-forwardbends'
+            },
+            {
+                id: 'plank',
+                name: 'Plank',
+                category: 'Isometric',
+                type: 'seconds',
+                met: 2.8,
+                secondsPerRep: 1,
+                iconType: 'fa',
+                icon: 'fa-stopwatch',
+                cardClass: 'card-plank'
+            }
+        ];
+
+        // GLOBAL APPLICATION STATE
+        let appState = {
+            themeMode: 'dark', // 'dark', 'light', 'oled'
+            themeStyle: 'round', // 'round', 'aero', 'metro'
+            multicolor: true,
+            restDuration: 15, // seconds
+            user: {
+                mass: 70, // kg
+                height: 175, // cm
+                points: 0
+            },
+            routine: [], // List of { exId, targetAmount }
+            questsState: {
+                lastResetTime: Date.now(),
+                completed: { q10: false, q50: false, q100: false },
+                activeSeed: Date.now()
+            },
+            logs: [],
+            activeCategory: 'All'
+        };
+
+        // WORKOUT PLAYER STATE
+        let workoutSession = {
+            active: false,
+            queue: [],
+            currentIndex: 0,
+            startTime: null,
+            timerInterval: null,
+            totalKcalBurned: 0,
+            restInterval: null,
+            restRemaining: 0,
+            isResting: false
+        };
+
+        // MET CALORIE CALCULATION FORMULAS
+        function calculateCalories(exercise, amount, mass) {
+            if (!exercise || !amount || amount <= 0 || !mass) return 0;
+
+            let durationMinutes = 0;
+            if (exercise.id === 'mountainclimbers') {
+                // Mountain Climbers formula: (8.0 * 3.5 * mass * reps) / 12000
+                return (8.0 * 3.5 * mass * amount) / 12000;
+            } else if (exercise.type === 'reps') {
+                durationMinutes = (amount * exercise.secondsPerRep) / 60;
+            } else if (exercise.type === 'seconds') {
+                durationMinutes = amount / 60;
+            }
+
+            // Standard MET formula: kcal = MET * 3.5 * mass * durationMinutes / 200
+            return (exercise.met * 3.5 * mass * durationMinutes) / 200;
+        }
+
+        function calculateRequiredAmountForCalories(exercise, targetKcal, mass) {
+            if (!exercise || !targetKcal || !mass) return 0;
+
+            if (exercise.id === 'mountainclimbers') {
+                return Math.ceil((targetKcal * 12000) / (8.0 * 3.5 * mass));
+            }
+
+            if (exercise.type === 'seconds') {
+                const minutes = (targetKcal * 200) / (exercise.met * 3.5 * mass);
+                return Math.ceil(minutes * 60);
+            } else {
+                const minutes = (targetKcal * 200) / (exercise.met * 3.5 * mass);
+                const seconds = minutes * 60;
+                return Math.ceil(seconds / exercise.secondsPerRep);
+            }
+        }
+
+        // INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            loadStateFromStorage();
+            checkWeeklyQuestReset();
+            applyTheme();
+            renderCategoryNav();
+            renderExerciseCatalog();
+            renderRoutineQueue();
+            renderHistoryTable();
+            updateDashboardStats();
+            setupEventListeners();
+        });
+
+        function loadStateFromStorage() {
+            try {
+                const saved = localStorage.getItem('openGym_appState_v2');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    appState = { ...appState, ...parsed };
+                }
+            } catch (e) {
+                console.error("Storage load error", e);
+            }
+
+            document.getElementById('userMass').value = appState.user.mass || '';
+            document.getElementById('userHeight').value = appState.user.height || '';
+            document.getElementById('restDurationInput').value = appState.restDuration || 15;
+            document.getElementById('multicolorToggle').checked = appState.multicolor;
+            document.getElementById('userPointsBadge').innerText = `${appState.user.points || 0} pts`;
+
+            checkMassWarning();
+        }
+
+        function saveStateToStorage() {
+            try {
+                localStorage.setItem('openGym_appState_v2', JSON.stringify(appState));
+            } catch (e) {
+                console.error("Storage save error", e);
+            }
+            checkMassWarning();
+        }
+
+        function checkMassWarning() {
+            const banner = document.getElementById('massWarningBanner');
+            if (!appState.user.mass || appState.user.mass <= 0) {
+                banner.classList.remove('hidden');
+            } else {
+                banner.classList.add('hidden');
+            }
+        }
+
+        // THEMES ENGINE
+        function applyTheme() {
+            const root = document.documentElement;
+            root.classList.remove('dark', 'light', 'oled-black', 'theme-round', 'theme-aero', 'theme-metro', 'mode-multicolor');
+
+            if (appState.themeMode === 'light') {
+                root.classList.add('light');
+            } else if (appState.themeMode === 'oled') {
+                root.classList.add('dark', 'oled-black');
+            } else {
+                root.classList.add('dark');
+            }
+
+            root.classList.add(`theme-${appState.themeStyle}`);
+
+            if (appState.multicolor) {
+                root.classList.add('mode-multicolor');
+            }
+        }
+
+        function setThemeMode(mode) {
+            appState.themeMode = mode;
+            applyTheme();
+            saveStateToStorage();
+            showToast(`Color mode set to ${mode.toUpperCase()}`);
+        }
+
+        function setThemeStyle(style) {
+            appState.themeStyle = style;
+            applyTheme();
+            saveStateToStorage();
+            showToast(`UI style set to ${style.toUpperCase()}`);
+        }
+
+        function toggleMulticolor(enabled) {
+            appState.multicolor = enabled;
+            applyTheme();
+            saveStateToStorage();
+            showToast(`Multicolor theme ${enabled ? 'enabled' : 'disabled'}`);
+        }
+
+        // RENDER EXERCISES CATALOG
+        function renderExerciseCatalog() {
+            const grid = document.getElementById('exerciseGrid');
+            grid.innerHTML = '';
+
+            const filtered = EXERCISES_DATABASE.filter(ex => 
+                appState.activeCategory === 'All' || ex.category === appState.activeCategory
+            );
+
+            filtered.forEach(ex => {
+                const card = document.createElement('div');
+                card.className = `glass-panel p-5 flex flex-col justify-between border border-slate-800 light:border-slate-200 transition-all duration-200 hover:border-brand-500/50 ${ex.cardClass}`;
+
+                const defaultAmount = ex.type === 'reps' ? 15 : 30;
+                const iconHtml = ex.iconType === 'svg' ? ex.icon : `<i class="fa-solid ${ex.icon}"></i>`;
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-11 h-11 rounded-xl bg-slate-900/60 light:bg-slate-100 flex items-center justify-center text-brand-500 text-xl border border-slate-700/50 light:border-slate-300">
+                                ${iconHtml}
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-slate-800/80 light:bg-slate-200 text-slate-300 light:text-slate-700 border border-slate-700/50">
+                                MET ${ex.met}
+                            </span>
+                        </div>
+
+                        <h3 class="font-bold text-base text-slate-100 light:text-slate-900 mb-1">${ex.name}</h3>
+                        <p class="text-xs text-slate-400 mb-4">${ex.category} • ${ex.type === 'reps' ? `~${ex.secondsPerRep}s / rep` : 'Timed hold'}</p>
+
+                        <div class="space-y-3">
+                            <label class="block text-[10px] font-bold uppercase text-slate-400">Target Amount (${ex.type === 'reps' ? 'Reps' : 'Seconds'}):</label>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="adjustCatalogValue('${ex.id}', -5)" class="btn-ui w-9 h-9 bg-slate-800 hover:bg-slate-700 light:bg-slate-200 light:hover:bg-slate-300 font-bold flex items-center justify-center">-</button>
+                                <input type="number" id="catalog-input-${ex.id}" value="${defaultAmount}" min="1" class="w-full bg-slate-900/80 light:bg-slate-100 border border-slate-700 light:border-slate-300 rounded-lg px-3 py-1.5 text-center font-bold text-slate-100 light:text-slate-900 focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm">
+                                <button onclick="adjustCatalogValue('${ex.id}', 5)" class="btn-ui w-9 h-9 bg-slate-800 hover:bg-slate-700 light:bg-slate-200 light:hover:bg-slate-300 font-bold flex items-center justify-center">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-t border-slate-800/60 light:border-slate-200/60 flex items-center justify-between">
+                        <button onclick="addToRoutineQueue('${ex.id}')" class="btn-ui w-full py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-md shadow-brand-600/20 flex items-center justify-center space-x-1.5 transition-transform active:scale-95">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Add to Routine Queue</span>
+                        </button>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function adjustCatalogValue(exId, delta) {
+            const input = document.getElementById(`catalog-input-${exId}`);
+            if (!input) return;
+            let val = parseInt(input.value) || 0;
+            input.value = Math.max(1, val + delta);
+        }
+
+        // ROUTINE QUEUE MANAGEMENT
+        function addToRoutineQueue(exId) {
+            const input = document.getElementById(`catalog-input-${exId}`);
+            const ex = EXERCISES_DATABASE.find(item => item.id === exId);
+            if (!input || !ex) return;
+
+            const amount = parseInt(input.value) || 1;
+
+            appState.routine.push({
+                queueId: Date.now().toString() + Math.random().toString().slice(2, 5),
+                exId: ex.id,
+                targetAmount: amount
+            });
+
+            saveStateToStorage();
+            renderRoutineQueue();
+            showToast(`Added ${amount} ${ex.type === 'reps' ? 'reps' : 'sec'} of ${ex.name} to routine!`);
+        }
+
+        function removeFromRoutineQueue(queueId) {
+            appState.routine = appState.routine.filter(item => item.queueId !== queueId);
+            saveStateToStorage();
+            renderRoutineQueue();
+        }
+
+        function clearRoutineQueue() {
+            appState.routine = [];
+            saveStateToStorage();
+            renderRoutineQueue();
+            showToast("Routine queue cleared");
+        }
+
+        function renderRoutineQueue() {
+            const container = document.getElementById('routineQueueList');
+            container.innerHTML = '';
+
+            if (!appState.routine || appState.routine.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-6 text-slate-500 text-xs border-2 border-dashed border-slate-800 light:border-slate-300 rounded-xl">
+                        <p class="font-bold">Your workout queue is empty!</p>
+                        <p class="mt-0.5">Select exercises from the catalog below to build your routine.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            appState.routine.forEach((item, index) => {
+                const ex = EXERCISES_DATABASE.find(e => e.id === item.exId);
+                if (!ex) return;
+
+                const estKcal = calculateCalories(ex, item.targetAmount, appState.user.mass).toFixed(1);
+                const iconHtml = ex.iconType === 'svg' ? ex.icon : `<i class="fa-solid ${ex.icon}"></i>`;
+
+                const row = document.createElement('div');
+                row.className = `p-3.5 bg-slate-900/80 light:bg-slate-100 border border-slate-800 light:border-slate-300 rounded-xl flex items-center justify-between ${ex.cardClass}`;
+
+                row.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-800 light:bg-slate-200 text-slate-400 font-bold text-xs flex items-center justify-center">${index + 1}</span>
+                        <div class="text-brand-500 text-lg">${iconHtml}</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-100 light:text-slate-900">${ex.name}</h4>
+                            <p class="text-xs text-slate-400">${item.targetAmount} ${ex.type === 'reps' ? 'reps' : 'seconds'} • <span class="text-amber-400 font-semibold">~${estKcal} kcal</span></p>
+                        </div>
+                    </div>
+
+                    <button onclick="removeFromRoutineQueue('${item.queueId}')" class="text-slate-500 hover:text-red-400 p-2 transition-colors">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                `;
+
+                container.appendChild(row);
+            });
+        }
+
+        // ACTIVE WORKOUT PLAYER (EXECUTION ENGINE - MATCHES EXACT SKETCH)
+        function startWorkoutRoutine() {
+            if (!appState.routine || appState.routine.length === 0) {
+                showToast("Please add at least one exercise to your routine!", "error");
+                return;
+            }
+
+            if (!appState.user.mass || appState.user.mass <= 0) {
+                showToast("Body mass required for calorie calculation!", "error");
+                openSettingsTab('tab-data');
+                return;
+            }
+
+            workoutSession = {
+                active: true,
+                queue: [...appState.routine],
+                currentIndex: 0,
+                startTime: Date.now(),
+                timerInterval: null,
+                totalKcalBurned: 0,
+                restInterval: null,
+                restRemaining: 0,
+                isResting: false
+            };
+
+            document.getElementById('workoutPlayerModal').classList.remove('hidden');
+
+            // Start global duration stopwatch
+            workoutSession.timerInterval = setInterval(updateWorkoutPlayerTime, 1000);
+
+            renderWorkoutPlayerCurrentStep();
+        }
+
+        function updateWorkoutPlayerTime() {
+            if (!workoutSession.startTime) return;
+            const elapsedSec = Math.floor((Date.now() - workoutSession.startTime) / 1000);
+            const mins = String(Math.floor(elapsedSec / 60)).padStart(2, '0');
+            const secs = String(elapsedSec % 60).padStart(2, '0');
+            document.getElementById('playerTotalTime').innerText = `${mins}:${secs}`;
+        }
+
+        function renderWorkoutPlayerCurrentStep() {
+            const modal = document.getElementById('workoutPlayerModal');
+            const item = workoutSession.queue[workoutSession.currentIndex];
+            if (!item) {
+                finishWorkoutSession();
+                return;
+            }
+
+            const ex = EXERCISES_DATABASE.find(e => e.id === item.exId);
+            const prevItem = workoutSession.queue[workoutSession.currentIndex - 1];
+            const nextItem = workoutSession.queue[workoutSession.currentIndex + 1];
+
+            const prevEx = prevItem ? EXERCISES_DATABASE.find(e => e.id === prevItem.exId) : null;
+            const nextEx = nextItem ? EXERCISES_DATABASE.find(e => e.id === nextItem.exId) : null;
+
+            // Update UI elements matching the precise sketch
+            document.getElementById('playerExerciseName').innerText = ex.name.toLowerCase();
+            document.getElementById('playerMainNumber').innerText = item.targetAmount;
+            
+            const iconContainer = document.getElementById('playerExerciseIcon');
+            iconContainer.innerHTML = ex.iconType === 'svg' ? ex.icon : `<i class="fa-solid ${ex.icon} text-4xl"></i>`;
+
+            document.getElementById('playerPreviousName').innerText = prevEx ? prevEx.name.toLowerCase() : 'none';
+            document.getElementById('playerNextName').innerText = nextEx ? nextEx.name.toLowerCase() : 'finish';
+
+            document.getElementById('playerTotalKcal').innerText = workoutSession.totalKcalBurned.toFixed(1);
+
+            // Hide rest overlay if visible
+            document.getElementById('playerRestOverlay').classList.add('hidden');
+            workoutSession.isResting = false;
+        }
+
+        function nextWorkoutStep() {
+            if (workoutSession.isResting) {
+                skipRestInterval();
+                return;
+            }
+
+            const currentItem = workoutSession.queue[workoutSession.currentIndex];
+            const ex = EXERCISES_DATABASE.find(e => e.id === currentItem.exId);
+
+            // Compute calories for current set and log it
+            const kcal = calculateCalories(ex, currentItem.targetAmount, appState.user.mass);
+            workoutSession.totalKcalBurned += kcal;
+
+            const durationSec = ex.type === 'reps' ? currentItem.targetAmount * ex.secondsPerRep : currentItem.targetAmount;
+
+            // Save individual log entry
+            appState.logs.unshift({
+                id: Date.now().toString(),
+                exId: ex.id,
+                exerciseName: ex.name,
+                category: ex.category,
+                amount: currentItem.targetAmount,
+                unit: ex.type === 'reps' ? 'reps' : 'sec',
+                calories: parseFloat(kcal.toFixed(2)),
+                durationSec: durationSec,
+                timestamp: new Date().toISOString()
+            });
+            saveStateToStorage();
+
+            workoutSession.currentIndex++;
+
+            if (workoutSession.currentIndex < workoutSession.queue.length && appState.restDuration > 0) {
+                startRestInterval();
+            } else {
+                renderWorkoutPlayerCurrentStep();
+            }
+        }
+
+        function startRestInterval() {
+            workoutSession.isResting = true;
+            workoutSession.restRemaining = appState.restDuration;
+
+            const overlay = document.getElementById('playerRestOverlay');
+            const countdownText = document.getElementById('playerRestCountdown');
+            overlay.classList.remove('hidden');
+
+            countdownText.innerText = `${workoutSession.restRemaining}s`;
+
+            workoutSession.restInterval = setInterval(() => {
+                workoutSession.restRemaining--;
+                countdownText.innerText = `${workoutSession.restRemaining}s`;
+
+                if (workoutSession.restRemaining <= 0) {
+                    skipRestInterval();
+                }
+            }, 1000);
+        }
+
+        function skipRestInterval() {
+            if (workoutSession.restInterval) clearInterval(workoutSession.restInterval);
+            document.getElementById('playerRestOverlay').classList.add('hidden');
+            workoutSession.isResting = false;
+            renderWorkoutPlayerCurrentStep();
+        }
+
+        function quitWorkoutPlayer() {
+            if (confirm("Quit current workout session?")) {
+                closeWorkoutPlayer();
+            }
+        }
+
+        function finishWorkoutSession() {
+            closeWorkoutPlayer();
+            renderHistoryTable();
+            updateDashboardStats();
+            showToast(`Workout Routine Complete! Burned ~${workoutSession.totalKcalBurned.toFixed(1)} kcal 🎉`);
+        }
+
+        function closeWorkoutPlayer() {
+            if (workoutSession.timerInterval) clearInterval(workoutSession.timerInterval);
+            if (workoutSession.restInterval) clearInterval(workoutSession.restInterval);
+
+            workoutSession.active = false;
+            document.getElementById('workoutPlayerModal').classList.add('hidden');
+        }
+
+        // WEEKLY QUESTS SYSTEM
+        function checkWeeklyQuestReset() {
+            const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+            const now = Date.now();
+
+            if (!appState.questsState || (now - appState.questsState.lastResetTime) > SEVEN_DAYS_MS) {
+                appState.questsState = {
+                    lastResetTime: now,
+                    completed: { q10: false, q50: false, q100: false },
+                    activeSeed: now
+                };
+                saveStateToStorage();
+            }
+
+            updateQuestResetTimerDisplay();
+        }
+
+        function updateQuestResetTimerDisplay() {
+            const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+            const remainingMs = Math.max(0, SEVEN_DAYS_MS - (Date.now() - appState.questsState.lastResetTime));
+            const days = Math.floor(remainingMs / (24 * 60 * 60 * 1000));
+            const hours = Math.floor((remainingMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+
+            document.getElementById('questResetTimer').innerText = `Reset in ${days}d ${hours}h`;
+        }
+
+        function renderQuests() {
+            const container = document.getElementById('questsContainer');
+            container.innerHTML = '';
+
+            const mass = appState.user.mass || 70;
+
+            // Pseudo-random exercise picker derived from activeSeed
+            const getRandomExercise = (offset) => {
+                const idx = (appState.questsState.activeSeed + offset) % EXERCISES_DATABASE.length;
+                return EXERCISES_DATABASE[idx];
+            };
+
+            // Quest 1: 10 kcal (1 Exercise)
+            const ex10 = getRandomExercise(1);
+            const req10 = calculateRequiredAmountForCalories(ex10, 10, mass);
+
+            // Quest 2: 50 kcal (4 Exercises, 12.5 kcal each)
+            const q50ExList = [getRandomExercise(2), getRandomExercise(3), getRandomExercise(4), getRandomExercise(5)];
+            
+            // Quest 3: 100 kcal (4 Exercises, 25 kcal each)
+            const q100ExList = [getRandomExercise(6), getRandomExercise(7), getRandomExercise(8), getRandomExercise(9)];
+
+            const questConfigs = [
+                {
+                    key: 'q10',
+                    title: '10 kcal Quick Challenge',
+                    points: 10,
+                    targetTotalKcal: 10,
+                    items: [{ ex: ex10, amount: req10, targetKcal: 10 }]
+                },
+                {
+                    key: 'q50',
+                    title: '50 kcal Endurance Circuit',
+                    points: 50,
+                    targetTotalKcal: 50,
+                    items: q50ExList.map(ex => ({ ex, amount: calculateRequiredAmountForCalories(ex, 12.5, mass), targetKcal: 12.5 }))
+                },
+                {
+                    key: 'q100',
+                    title: '100 kcal Beast Challenge',
+                    points: 100,
+                    targetTotalKcal: 100,
+                    items: q100ExList.map(ex => ({ ex, amount: calculateRequiredAmountForCalories(ex, 25, mass), targetKcal: 25 }))
+                }
+            ];
+
+            questConfigs.forEach(q => {
+                const isCompleted = appState.questsState.completed[q.key];
+                const card = document.createElement('div');
+                card.className = `p-5 bg-slate-800/60 light:bg-slate-100 border border-slate-700/60 light:border-slate-300 rounded-xl space-y-3 ${isCompleted ? 'opacity-60' : ''}`;
+
+                let itemsHtml = q.items.map(i => `
+                    <li class="flex items-center justify-between text-xs text-slate-300 light:text-slate-700">
+                        <span>• ${i.ex.name}</span>
+                        <span class="font-bold text-brand-400">${i.amount} ${i.ex.type === 'reps' ? 'reps' : 'sec'} (~${i.targetKcal} kcal)</span>
+                    </li>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-100 light:text-slate-900">${q.title}</h4>
+                            <p class="text-xs text-amber-400 font-semibold">+${q.points} Points Reward</p>
+                        </div>
+                        ${isCompleted ? 
+                            `<span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-lg">Completed ✓</span>` : 
+                            `<button onclick="completeQuest('${q.key}', ${q.points})" class="btn-ui px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 transition-all">Claim Reward</button>`
+                        }
+                    </div>
+
+                    <ul class="space-y-1 bg-slate-900/60 light:bg-white p-3 rounded-lg border border-slate-800 light:border-slate-200">
+                        ${itemsHtml}
+                    </ul>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function completeQuest(questKey, points) {
+            appState.questsState.completed[questKey] = true;
+            appState.user.points = (appState.user.points || 0) + points;
+            saveStateToStorage();
+
+            document.getElementById('userPointsBadge').innerText = `${appState.user.points} pts`;
+            renderQuests();
+            showToast(`Quest Completed! Earned +${points} points! 🎉`);
+        }
+
+        // HISTORY TABLE & DASHBOARD
+        function renderHistoryTable() {
+            const tbody = document.getElementById('historyTableBody');
+            const emptyMsg = document.getElementById('emptyHistoryMsg');
+
+            tbody.innerHTML = '';
+
+            if (!appState.logs || appState.logs.length === 0) {
+                emptyMsg.classList.remove('hidden');
+                return;
+            }
+
+            emptyMsg.classList.add('hidden');
+
+            appState.logs.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/30 light:hover:bg-slate-100/60 transition-colors";
+
+                const dateStr = new Date(log.timestamp).toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-slate-100 light:text-slate-900">${log.exerciseName}</td>
+                    <td class="p-3.5">
+                        <span class="text-xs px-2 py-0.5 rounded bg-slate-800 light:bg-slate-200 font-semibold text-slate-300 light:text-slate-700">
+                            ${log.category}
+                        </span>
+                    </td>
+                    <td class="p-3.5 font-semibold text-brand-400">${log.amount} ${log.unit}</td>
+                    <td class="p-3.5 font-bold text-amber-400">${log.calories} kcal</td>
+                    <td class="p-3.5 text-xs text-slate-400">${dateStr}</td>
+                    <td class="p-3.5 text-right">
+                        <button onclick="deleteLogEntry('${log.id}')" class="text-slate-500 hover:text-red-400 p-1.5 transition-colors">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        function deleteLogEntry(logId) {
+            appState.logs = appState.logs.filter(l => l.id !== logId);
+            saveStateToStorage();
+            renderHistoryTable();
+            updateDashboardStats();
+            showToast("Log entry deleted");
+        }
+
+        function updateDashboardStats() {
+            let totalKcal = 0;
+            let totalTimeSec = 0;
+
+            appState.logs.forEach(log => {
+                totalKcal += log.calories || 0;
+                totalTimeSec += log.durationSec || 0;
+            });
+
+            document.getElementById('statCalories').innerHTML = `${totalKcal.toFixed(1)} <span class="text-sm font-semibold text-slate-400">kcal</span>`;
+            document.getElementById('statWorkouts').innerText = appState.logs.length;
+            document.getElementById('statTime').innerHTML = `${(totalTimeSec / 60).toFixed(1)} <span class="text-sm font-semibold text-slate-400">min</span>`;
+
+            const mass = appState.user.mass;
+            const heightM = appState.user.height / 100;
+
+            if (mass && heightM > 0) {
+                const bmi = (mass / (heightM * heightM)).toFixed(1);
+                document.getElementById('statBmi').innerText = bmi;
+            } else {
+                document.getElementById('statBmi').innerText = '--';
+            }
+        }
+
+        function renderCategoryNav() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    tabs.forEach(t => {
+                        t.className = 'nav-tab btn-ui px-4 py-2 text-sm font-semibold text-slate-400 hover:text-white light:hover:text-slate-900 transition-all whitespace-nowrap';
+                    });
+
+                    const target = e.currentTarget;
+                    target.className = 'nav-tab btn-ui px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap bg-brand-600 text-white shadow-md shadow-brand-600/30';
+
+                    appState.activeCategory = target.dataset.category;
+                    renderExerciseCatalog();
+                });
+            });
+        }
+
+        function openSettingsTab(tabId) {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.remove('hidden');
+
+            const tabBtn = document.querySelector(`.settings-tab[data-tab="${tabId}"]`);
+            if (tabBtn) tabBtn.click();
+        }
+
+        function setupEventListeners() {
+            // Routine Buttons
+            document.getElementById('clearRoutineBtn').addEventListener('click', clearRoutineQueue);
+            document.getElementById('startWorkoutBtn').addEventListener('click', startWorkoutRoutine);
+
+            // Settings Modal
+            const settingsModal = document.getElementById('settingsModal');
+            document.getElementById('settingsBtn').addEventListener('click', () => {
+                settingsModal.classList.remove('hidden');
+            });
+            document.getElementById('closeSettingsBtn').addEventListener('click', () => {
+                settingsModal.classList.add('hidden');
+            });
+
+            const settingsTabs = document.querySelectorAll('.settings-tab');
+            settingsTabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    settingsTabs.forEach(t => {
+                        t.className = 'settings-tab py-3 px-4 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200 border-b-2 border-transparent';
+                    });
+                    const target = e.currentTarget;
+                    target.className = 'settings-tab py-3 px-4 text-xs font-bold uppercase tracking-wider border-b-2 border-brand-500 text-brand-500';
+
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                    document.getElementById(target.dataset.tab).classList.remove('hidden');
+                });
+            });
+
+            // Save Physical Profile
+            document.getElementById('saveDataBtn').addEventListener('click', () => {
+                const mass = parseFloat(document.getElementById('userMass').value);
+                const height = parseFloat(document.getElementById('userHeight').value);
+
+                if (!mass || mass < 20 || mass > 300) {
+                    showToast("Please enter a valid body mass (20-300 kg)", "error");
+                    return;
+                }
+
+                appState.user.mass = mass;
+                appState.user.height = height || 0;
+                saveStateToStorage();
+                updateDashboardStats();
+                renderRoutineQueue();
+                showToast("Body profile saved successfully!");
+            });
+
+            // Save Routine Rest Settings
+            document.getElementById('saveRoutineSettingsBtn').addEventListener('click', () => {
+                const restSec = parseInt(document.getElementById('restDurationInput').value);
+                appState.restDuration = isNaN(restSec) ? 15 : restSec;
+                saveStateToStorage();
+                showToast("Workout rest interval saved!");
+            });
+
+            // Export Save File (.sav)
+            document.getElementById('exportSaveBtn').addEventListener('click', () => {
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", dataStr);
+                downloadAnchor.setAttribute("download", `opengym_save_${new Date().toISOString().slice(0,10)}.sav`);
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+                showToast("Save file exported (.sav)");
+            });
+
+            // Import Save File (.sav)
+            const importFileInput = document.getElementById('importFileInput');
+            document.getElementById('importSaveBtn').addEventListener('click', () => importFileInput.click());
+
+            importFileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const imported = JSON.parse(event.target.result);
+                        if (imported && imported.user) {
+                            appState = { ...appState, ...imported };
+                            saveStateToStorage();
+                            applyTheme();
+                            renderExerciseCatalog();
+                            renderRoutineQueue();
+                            renderHistoryTable();
+                            updateDashboardStats();
+                            showToast("Save file imported successfully!");
+                            settingsModal.classList.add('hidden');
+                        }
+                    } catch (err) {
+                        showToast("Invalid save file!", "error");
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+            // Delete Browser Data
+            document.getElementById('deleteDataBtn').addEventListener('click', () => {
+                if (confirm("Delete all browser storage?")) {
+                    localStorage.removeItem('openGym_appState_v2');
+                    location.reload();
+                }
+            });
+
+            // Quests Modal
+            const questsModal = document.getElementById('questsModal');
+            document.getElementById('questsBtn').addEventListener('click', () => {
+                renderQuests();
+                questsModal.classList.remove('hidden');
+            });
+            document.getElementById('closeQuestsBtn').addEventListener('click', () => {
+                questsModal.classList.add('hidden');
+            });
+        }
+
+        // TOAST NOTIFICATION UTILITY
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `px-4 py-3 rounded-xl text-xs font-bold text-white shadow-2xl flex items-center space-x-2 transition-all transform translate-y-2 opacity-0 pointer-events-auto ${type === 'error' ? 'bg-red-600' : 'bg-brand-600'}`;
+
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'error' ? 'fa-circle-xmark' : 'fa-circle-check'}"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
