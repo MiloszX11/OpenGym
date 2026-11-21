@@ -768,13 +768,39 @@ function weeklyTotals() {
         sessions:logs.length
     };
 }
+function posterArt(key) {
+    return `<canvas aria-hidden="true" width="480" height="286" data-pose="${key}"></canvas>`;
+}
+function drawPosters(container) {
+    container.querySelectorAll('[data-pose]').forEach(canvas => paintMovement(canvas,canvas.dataset.pose,1));
+}
 function renderWeeklyGoals() {
     const totals = weeklyTotals();
-    document.getElementById('questResetTimer').textContent = new Date(state.questsResetTime).toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
-    document.getElementById('weekly-goals').innerHTML = weeklyGoals.map(g => {
-        const done = !!state.completedQuests[g.key];
-        const value = Math.min(g.target,totals[g.key]);
-        return `<article class="session-card"><small>+${g.xp} XP</small><h4>${g.title}</h4><progress value="${value}" max="${g.target}"></progress><p>${value} / ${g.target} ${g.unit}</p><button onclick="claimWeekly('${g.key}')" ${done || value<g.target?'disabled':''}>${done?'Claimed':value===g.target?'Claim bonus':'In progress'}</button></article>`;
+    const logs = state.history.filter(h => h.timestamp >= state.weekStart && h.timestamp < state.questsResetTime);
+    const used = Object.keys(EXERCISES_DATABASE).filter(key => logs.some(h => h.exStats?.[key] > 0));
+    const todayLogged = logs.some(h=>new Date(h.timestamp).toDateString()===new Date().toDateString() && Object.values(h.exStats || {}).some(v=>v>0));
+    const pending = weeklyGoals.filter(g=>!state.completedQuests[g.key]);
+    const priority = g => totals[g.key]>=g.target ? 2 : g.key==='attendance' && todayLogged ? -1 : totals[g.key]/g.target;
+    const goal = pending.sort((a,b)=>priority(b)-priority(a))[0];
+    const move = ['push_ups','squats','bicycle_crunches','plank'].find(key=>!used.includes(key)) || 'squats';
+    document.getElementById('questResetTimer').textContent = new Date(state.questsResetTime).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+    const hero = document.getElementById('featured-mission');
+    if (goal) {
+        const count=Math.min(totals[goal.key],goal.target);
+        const ready=count===goal.target;
+        const wait=goal.key==='attendance' && todayLogged && !ready;
+        const action=ready ? `<button onclick="claimWeekly('${goal.key}')">Claim ${goal.xp} XP</button>` :
+            wait ? '<p>Log a workout on another day to finish.</p>' :
+            `<button onclick="addToRoutine('${move}');switchTab('workout')">Add ${EXERCISES_DATABASE[move].name}</button>`;
+        hero.innerHTML=`<article class="poster featured">${posterArt(move)}<div><small>${ready?'Reward ready':'Featured quest'} · <b>+${goal.xp} XP</b></small><h3>${goal.title}</h3><p>${count} of ${goal.target} ${goal.unit}</p><progress max="${goal.target}" value="${count}"></progress>${action}</div></article>`;
+        drawPosters(hero);
+    } else hero.innerHTML='<article class="poster featured"><div><h3>Week complete</h3><p>All three weekly bonuses claimed.</p></div></article>';
+    document.getElementById('weekly-goals').innerHTML=weeklyGoals.map(g=>{
+        const count=Math.min(totals[g.key],g.target);
+        const details=g.key==='variety' ? (used.map(k=>EXERCISES_DATABASE[k].name).join(', ') || 'No exercises logged yet.') :
+            g.key==='attendance' ? 'Each calendar day counts once.' : 'Each completed workout counts once.';
+        const claim=!state.completedQuests[g.key] && count===g.target ? `<button onclick="claimWeekly('${g.key}')">Claim ${g.xp} XP</button>` : '';
+        return `<article class="session-card"><details><summary><strong>${count}/${g.target}</strong> ${g.unit}</summary><p>${details}</p></details><progress value="${count}" max="${g.target}"></progress><small>${state.completedQuests[g.key]?'✓ Claimed':'+'+g.xp+' XP'}</small>${claim}</article>`;
     }).join('');
 }
 function claimWeekly(key) {
@@ -787,20 +813,21 @@ function claimWeekly(key) {
 }
 function eventKey(evt, value) {return state.weekStart + '_' + evt.dayIdx + '_' + value;}
 function stageXP(evt,value) {return evt.exKey==='plank'?Math.round(value/2):value;}
+let previewDay = null;
 function renderWeeklyEvents() {
     const today = new Date().getDay();
-    const todayEvent = WEEKLY_EVENTS_CONFIG.find(evt=>evt.dayIdx===today);
-    const cleared = Object.keys(state.completedEventStages || {}).filter(k=>k.startsWith(state.weekStart+'_')).length;
-    document.getElementById('event-week').textContent = (todayEvent?'Today · '+todayEvent.title:'Next event · Squat Monday') + '  /  '+cleared+' of 20 stages cleared';
-    document.getElementById('eventsListContainer').innerHTML = WEEKLY_EVENTS_CONFIG.map(evt=>{
-        const active = evt.dayIdx===today;
-        const buttons = evt.stages.map(value=>{
-            const key = eventKey(evt,value);
-            const done = !!state.completedEventStages[key];
-            return `<button ${!active || done?'disabled':''} onclick="runEventStage(${evt.dayIdx},${value})"><strong>${value} ${evt.unit.toLowerCase()}</strong><small>${done?'✓ Cleared':'+'+stageXP(evt,value)+' XP'}</small></button>`;
-        }).join('');
-        return `<article class="event-day ${active?'active':''}"><small>${evt.dayName} · ${evt.tag}</small><h3>${evt.title}</h3><div class="stage-row">${buttons}</div></article>`;
+    const day = previewDay || (today>=1 && today<=5 ? today : 1);
+    const evt = WEEKLY_EVENTS_CONFIG.find(e=>e.dayIdx===day);
+    const active = today===day;
+    const container = document.getElementById('eventsListContainer');
+    const buttons = evt.stages.map(value=>{
+        const done=!!state.completedEventStages[eventKey(evt,value)];
+        return `<button ${!active||done?'disabled':''} onclick="runEventStage(${day},${value})"><strong>${value} ${evt.unit.toLowerCase()}</strong><small>${done?'✓ Cleared':'+'+stageXP(evt,value)+' XP'}</small></button>`;
     }).join('');
+    container.innerHTML=`<article class="poster featured">${posterArt(evt.exKey)}<div><small>${active?'Live today': 'Preview'} · ${evt.dayName}</small><h3>${evt.title}</h3><p>${active?'Pick a stage to begin.':'Stages open on '+evt.dayName.toLowerCase()+'.'}</p></div></article>
+        <div class="stage-row event-stages">${buttons}</div><div class="day-strip" aria-label="Preview a weekday">${WEEKLY_EVENTS_CONFIG.map(e=>`<button aria-pressed="${day===e.dayIdx}" onclick="previewDay=${e.dayIdx};renderWeeklyEvents()">${e.dayName.slice(0,3)}</button>`).join('')}</div>`;
+    drawPosters(container);
+    document.getElementById('event-week').textContent = Object.keys(state.completedEventStages).filter(k=>k.startsWith(state.weekStart+'_')).length+' of 20 stages cleared this week';
 }
 function runEventStage(day, value) {
     syncWeek();
@@ -996,48 +1023,18 @@ function renderQuests() {
     ];
 
     quests.forEach(q => {
-        const isCompleted = state.completedQuests[q.id];
-        const card = document.createElement("div");
-        
-        if (q.type === "kcal") {
-            card.className = `card-ui bg-[var(--card-bg)] border border-[var(--border-color)] p-5 rounded-2xl shadow-sm flex flex-col justify-between space-y-4 ${isCompleted ? 'opacity-60' : ''}`;
-            card.innerHTML = `
-                <div class="space-y-2">
-                    <div class="flex justify-between items-start">
-                        <span class="text-xs font-black uppercase tracking-wider bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2.5 py-1 rounded-full">+${q.reward} XP</span>
-                        <i class="fa-solid ${isCompleted ? 'fa-circle-check text-emerald-500' : 'fa-scroll text-amber-500'} text-xl"></i>
-                    </div>
-                    <h3 class="font-extrabold text-base text-slate-800 dark:text-slate-100">${q.title}</h3>
-                    <p class="text-xs text-slate-500">Burn a total of ${q.kcalTarget} kcal using ${q.count} assigned exercise(s).</p>
-                </div>
-
-                <button onclick="openQuestDetails('${q.id}', ${q.kcalTarget}, ${q.reward}, ${q.count})" ${isCompleted ? 'disabled' : ''} class="w-full py-3 rounded-xl font-bold text-xs transition-all ${isCompleted ? 'bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-md shadow-orange-500/20'}">
-                    ${isCompleted ? 'COMPLETED THIS WEEK' : 'VIEW QUEST'}
-                </button>
-            `;
-        } else if (q.type === "weight_sp") {
-            const totalTarget = q.targetKg;
-            const calculatedPoints = q.fixedXP !== undefined ? q.fixedXP : Math.round(totalTarget / 15);
-            const is5t = totalTarget === 5000;
-            
-            card.className = `${q.cardStyle} p-5 rounded-2xl flex flex-col justify-between space-y-4 ${isCompleted ? 'opacity-60' : ''}`;
-            card.innerHTML = `
-                <div class="space-y-2">
-                    <div class="flex justify-between items-start">
-                        <span class="text-xs font-black uppercase tracking-wider ${is5t ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/50' : 'bg-white/20 text-white'} px-2.5 py-1 rounded-full">+${calculatedPoints} XP</span>
-                        <i class="fa-solid ${isCompleted ? 'fa-circle-check text-emerald-400' : (is5t ? 'fa-fire-flame-curved text-blue-400 animate-pulse' : 'fa-dumbbell text-white')} text-xl"></i>
-                    </div>
-                    <h3 class="font-extrabold text-base text-white">${q.title}</h3>
-                    <p class="text-xs text-white/80">Lift a cumulative ${totalTarget >= 1000 ? (totalTarget/1000)+'t' : totalTarget+'kg'} using Dumbbell Shoulder Press (1 rep = 1x dumbbell mass).</p>
-                </div>
-
-                <button onclick="openSpQuestDetails('${q.id}', ${totalTarget}, ${calculatedPoints})" ${isCompleted ? 'disabled' : ''} class="w-full py-3 rounded-xl font-bold text-xs transition-all ${isCompleted ? 'bg-white/20 text-white/50 cursor-not-allowed' : 'bg-white text-slate-900 hover:bg-slate-100 shadow-md'}">
-                    ${isCompleted ? 'COMPLETED THIS WEEK' : 'CONFIGURE & VIEW QUEST'}
-                </button>
-            `;
-        }
-        container.appendChild(card);
+        const done = !!state.completedQuests[q.id];
+        const strength = q.type==='weight_sp';
+        const reward = strength ? q.fixedXP ?? Math.round(q.targetKg/15) : q.reward;
+        const move = strength ? 'shoulder_press' : missionMoves[q.id][0];
+        const action = strength ? `openSpQuestDetails('${q.id}',${q.targetKg},${reward})` :
+            `openQuestDetails('${q.id}',${q.kcalTarget},${reward},${q.count})`;
+        const task = strength ? 'Accumulate '+q.targetKg+' kg across shoulder press reps.' :
+            missionMoves[q.id].map(k=>EXERCISES_DATABASE[k].name).join(' · ');
+        container.insertAdjacentHTML('beforeend',`<article class="poster mission">${posterArt(move)}<div><small><b>+${reward} XP</b></small><h4>${q.title}</h4><p>${task}</p><button ${done?'disabled':''} onclick="${action}">${done?'✓ Completed':'View mission →'}</button></div></article>`);
     });
+    drawPosters(container);
+
 }
 
 function openSpQuestDetails(questId, targetKg, rewardXP) {
@@ -1101,15 +1098,13 @@ function recalcSpQuestReps(targetKg) {
     updateAcceptButtonState(true);
 }
 
+const missionMoves = {
+    quest_10:['push_ups'],
+    quest_50:['bicycle_crunches','squats','wall_press','plank'],
+    quest_100:['jumping_jacks','lunges','mountain_climbers','skipping_rope']
+};
 function openQuestDetails(questId, targetKcal, reward, count) {
-    const exKeys = Object.keys(EXERCISES_DATABASE);
-    const selectedKeys = [];
-    
-    for (let i = 0; i < count; i++) {
-        const randKey = exKeys[Math.floor(Math.random() * exKeys.length)];
-        selectedKeys.push(randKey);
-    }
-
+    const selectedKeys = missionMoves[questId];
     const hasDumbbell = selectedKeys.some(k => EXERCISES_DATABASE[k].isDumbbell);
 
     selectedQuestTemp = { 
@@ -1441,6 +1436,7 @@ for (const event of ['play', 'pause', 'ended', 'error']) {
 
 /* ==================== 12. GUI NAVIGATION & THEMES ==================== */
 function switchTab(tabId) {
+    if (tabId==="events") previewDay=null;
     if (tabId==="events" || tabId==="quests") {syncWeek(); renderWeeklyEvents(); renderWeeklyGoals(); renderQuests();}
     document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
     document.getElementById(tabId + "Tab").classList.remove("hidden");

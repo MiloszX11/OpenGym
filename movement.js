@@ -48,16 +48,24 @@ function startDemo(key) {
 function drawDemo(now) {
     if (demoLast !== undefined && !demoPaused) demoTime += Math.min(100, now-demoLast);
     demoLast = now;
+    paintMovement(document.getElementById('demo'), demoKey, demoTime / 920);
+    document.getElementById('demo-control').textContent=demoPaused?'Play demo':'Pause demo';
+    if(!demoPaused)demoFrame=requestAnimationFrame(drawDemo);
+}
+document.getElementById('demo-control').onclick=()=>{
+    stopDemo();demoPaused=!demoPaused;drawDemo(performance.now());
+};
+
+function paintMovement(canvas, demoKey, phase) {
     const frames = guides[demoKey][1];
     // A three-stage chair stand returns via the forward-leaning position.
     const seq = demoKey === 'chair_stand' ? [frames[0],frames[1],frames[2],frames[1]] : frames;
-    const phase = demoTime / 920;
     const a = seq[Math.floor(phase)%seq.length], b = seq[(Math.floor(phase)+1)%seq.length];
     const mix = (1-Math.cos(Math.PI*(phase%1)))/2;
     function full(p) {return p.length === 14 ? [...p,p[6]-2,p[7],p[8]-3,p[9],p[10]-3,p[11],p[12]-4,p[13]] : p;}
     const end = full(b);
     const v = full(a).map((value,i) => value+(end[i]-value)*mix);
-    const ctx = document.getElementById('demo').getContext('2d');
+    const ctx = canvas.getContext('2d');
     ctx.setTransform(2.8,0,0,2.8,76,3);
     ctx.clearRect(-28,-2,173,104);
     function line(coords,color,width) {
@@ -80,9 +88,24 @@ function drawDemo(now) {
         ctx.beginPath();ctx.ellipse(55,51,22,Math.max(1,45*Math.abs(Math.cos(phase*Math.PI))),0,0,Math.PI*2);ctx.strokeStyle='#f4ae79';ctx.lineWidth=.8;ctx.stroke();
     }
     ctx.fillStyle='#f0c89b';ctx.beginPath();ctx.arc(v[0],v[1],5.3,0,Math.PI*2);ctx.fill();
-    document.getElementById('demo-control').textContent=demoPaused?'Play demo':'Pause demo';
-    if(!demoPaused)demoFrame=requestAnimationFrame(drawDemo);
 }
-document.getElementById('demo-control').onclick=()=>{
-    stopDemo();demoPaused=!demoPaused;drawDemo(performance.now());
-};
+
+function previewMissionMovement(event) {
+    const card = event.target.closest('.mission');
+    if (!card || card.contains(event.relatedTarget) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const canvas = card.querySelector('[data-pose]');
+    if (canvas.dataset.playing) return;
+    canvas.dataset.playing = 'true';
+    const start = performance.now();
+    const cycle = guides[canvas.dataset.pose][1].length;
+    function frame(now) {
+        if (!canvas.isConnected) return;
+        const fraction = Math.min(1,(now-start)/1500);
+        paintMovement(canvas,canvas.dataset.pose,1+cycle*fraction);
+        if (fraction<1) requestAnimationFrame(frame);
+        else delete canvas.dataset.playing;
+    }
+    requestAnimationFrame(frame);
+}
+document.getElementById('questsList').addEventListener('pointerover',previewMissionMovement);
+document.getElementById('questsList').addEventListener('focusin',previewMissionMovement);

@@ -1,9 +1,6 @@
 # OpenGym
 OpenGym is a browser-based workout planner with exercise demos, weekly challenges and a local soundtrack.
 
-## GitHub Pages
-Place index.html and the accompanying files in the repository root. Under Settings → Pages choose Deploy from a branch, select main and / (root), then save.
-
 ## Workout data
 Each browser stores its workout history and profile in local storage. A new profile starts with zero XP and an empty history. Weight and height start at editable example values of 70 kg and 175 cm. Exported backups are personal files and should be kept outside the public repository.
 

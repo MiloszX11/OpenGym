@@ -45,11 +45,11 @@ body.style-aero {
     background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #f0f9ff 100%) !important;
     min-height: 100vh;
 }
-body.dark.style-aero {
+html.dark body.style-aero {
     background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%) !important;
 }
 
-.style-aero .card-ui {
+.style-aero .card-ui:not(.bg-gradient-to-br) {
     border-radius: 12px !important;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(224, 242, 254, 0.45) 100%) !important;
     backdrop-filter: blur(16px) saturate(180%) !important;
@@ -58,7 +58,7 @@ body.dark.style-aero {
     box-shadow: 0 8px 32px 0 rgba(0, 102, 204, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
-.dark.style-aero .card-ui {
+html.dark .style-aero .card-ui:not(.bg-gradient-to-br) {
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1) !important;
@@ -132,3 +132,37 @@ body.dark.style-aero {
 #rank-ring{width:5.5rem;aspect-ratio:1;margin:auto;border-radius:50%;padding:.4rem;background:conic-gradient(var(--rank-color) var(--progress),#98a7ae44 0)}
 #rank-mark{display:grid;height:100%;place-items:center;border-radius:50%;background:var(--card-bg);font:800 2rem monospace;color:var(--rank-color)}
 #rank-distance{font-weight:700;font-size:.9rem}
+html.dark body.style-aero{background:radial-gradient(ellipse at top right,#162d39,#090d15 62%) fixed!important;color:#f0f6fa}
+html.dark .style-aero .text-slate-500{color:#acbed0}
+.mission-header,.blitz-entry{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.mission-title{font-size:clamp(1.7rem,5vw,2.5rem);font-weight:800;letter-spacing:-.055em}
+.poster{position:relative;isolation:isolate;overflow:hidden;border-radius:1.15rem;background:radial-gradient(ellipse at 88% 40%,#205859,#142e3e 46%,#101e31 85%);color:#f3ffff;padding:clamp(1.15rem,4vw,2.1rem);border:1px solid #356068}
+.poster canvas{position:absolute;z-index:-1;width:49%;right:-4%;bottom:4%;height:88%;object-fit:contain;opacity:.92}
+.poster>div{width:65%}
+.poster small,.session-card small{font-weight:700;font-size:.76rem}
+.poster b{color:#ffce74}
+.poster h3{font-size:clamp(1.75rem,5vw,3.5rem);line-height:1.04;letter-spacing:-.04em;font-weight:800;margin:.55rem 0}
+.poster h4{font-size:1.18rem;font-weight:800;line-height:1.16;margin:.5rem 0}
+.poster p{font-size:.86rem;color:#cee0e6;margin:.55rem 0}
+.poster progress{display:block;width:100%;height:.55rem;accent-color:#52e0cc;margin:.7rem 0}
+.poster button,.blitz-entry,.day-strip button,.event-stages button{font-weight:750;padding:.6rem .85rem;border-radius:.6rem}
+.poster button{margin-top:.6rem;background:#a1f3dc;color:#113831}
+.poster button:disabled{background:#324a50;color:#dae6e8}
+.mission-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:.75rem}
+.mission{padding:1.2rem}
+.day-strip,.event-stages{display:flex;flex-wrap:wrap;gap:.4rem;margin:.85rem 0}
+.day-strip button,.event-stages button,.blitz-entry{border:1px solid var(--border-color);background:var(--card-bg);color:var(--text-main)}
+.day-strip button{flex:1;font-size:.74rem}
+.day-strip button[aria-pressed=true],.event-stages button:enabled{background:#15665d;color:white}
+.event-stages button{flex:1;min-width:68px}
+.event-stages small,.session-card small{display:block}
+.session-card summary{cursor:pointer}
+.blitz-entry{width:100%}
+.blitz-entry span{font-size:.8rem}
+#flat-map[hidden],#volume[hidden]{display:none!important}
+.map-tools{display:flex;align-items:center;justify-content:center;gap:.55rem;flex-wrap:wrap;font-size:.8rem;font-weight:700}
+.map-tools select,.map-tools button{max-width:100%;background:var(--card-bg);color:var(--text-main);padding:.4rem .65rem;border:1px solid var(--border-color);border-radius:.55rem}
+#volume{text-align:center;background:radial-gradient(ellipse,#304453,#12212e 70%);color:white;border-radius:1rem;padding:.6rem}
+#body-volume{width:min(100%,480px);height:auto;display:block;margin:auto;touch-action:none;cursor:grab}
+#volume p,#volume output{display:block;font-size:.78rem;margin:.4rem}
+.atlas-legend span{background:var(--muscle-ramp)}

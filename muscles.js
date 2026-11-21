@@ -38,16 +38,41 @@ function muscleExposure(ex, units) {
     const sum = entries.reduce((total, entry) => total + entry[1], 0);
     return entries.map(([id, weight]) => [id, seconds * weight / sum]);
 }
+const mapScores = {};
+const colourStops = {
+    red: [[255,255,255],[214,35,46]],
+    spectrum: [[255,255,255],[55,179,93],[255,224,54],[249,136,43],[214,35,46]]
+};
+function activeStops() { return colourStops[state.mapPalette] || colourStops.red; }
+function muscleRGB(value, peak) {
+    const stops = activeStops();
+    const position = (peak ? Math.min(1,value/peak) : 0) * (stops.length-1);
+    const i = Math.min(Math.floor(position),stops.length-2);
+    return stops[i].map((c,k)=>Math.round(c+(stops[i+1][k]-c)*(position-i)));
+}
 function paintAtlas(scope, prefix, scores) {
+    mapScores[scope] = scores;
+    syncPaletteControls();
     const peak = Math.max(0, ...Object.values(scores));
     document.querySelectorAll(scope + ' .muscle-target').forEach(el => {
         const id = el.id.slice(prefix.length);
         const value = scores[id] || 0;
-        const t = peak ? Math.sqrt(value / peak) : 0;
-        el.style.fill = value ? 'hsl(345 72% ' + (94 - 56*t) + '%)' : '#dfebef';
+        el.style.fill = 'rgb('+muscleRGB(value,peak).join(',')+')';
         el.querySelector('title').textContent = cleanMuscleName(id) + (value ? ' · ' + Math.round(100*value/peak) + '% of highest modeled load' : ' · No modeled load');
     });
+    if(scope==='#statsTab' && !document.getElementById('volume').hidden) drawVolume();
 }
 document.querySelectorAll('[data-atlas]').forEach(slot => {
     slot.innerHTML = atlasBody(slot.closest('#statsTab') ? 'stats-' : '', slot.dataset.atlas === 'front');
+});
+
+function syncPaletteControls() {
+    document.querySelectorAll('.map-palette').forEach(input=>input.value=state.mapPalette==='spectrum'?'spectrum':'red');
+    document.documentElement.style.setProperty('--muscle-ramp','linear-gradient(90deg,'+
+        activeStops().map(rgb=>'rgb('+rgb.join(',')+')').join(',')+')');
+}
+document.querySelectorAll('.map-palette').forEach(input=>input.onchange=()=>{
+    state.mapPalette=input.value;
+    saveState();
+    if(mapScores['#exerciseInfoModal']) paintAtlas('#exerciseInfoModal','',mapScores['#exerciseInfoModal']);
 });
